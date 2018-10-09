@@ -3,6 +3,7 @@ INSERT INTO legohouse.customers(username, email, password) VALUES('Claus', 'clau
 -- bricks.
 INSERT INTO bricks(length, width) values(1,2);
 INSERT INTO bricks(length, width) values(2,4);
+INSERT INTO bricks(length, width) values(2,2);
 -- orders.
 INSERT INTO orders(customerId) VALUES(1);
 -- lineitems.

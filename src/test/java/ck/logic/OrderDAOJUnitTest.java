@@ -9,6 +9,7 @@ import ck.data.DbConnection;
 import ck.data.LineItemDTO;
 import ck.data.OrderDTO;
 import java.sql.Connection;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -76,9 +77,10 @@ public class OrderDAOJUnitTest
     
     /** 
      * Test that we can retrieve an order.
+     * @throws LegoException
      */
     @Test
-    public void testGetOrder()
+    public void testGetOrder() throws LegoException
     {
         OrderDTO order = OrderDAO.getOrder(1);        
         assertTrue(order != null);
@@ -86,9 +88,10 @@ public class OrderDAOJUnitTest
     
     /**
      * Test that retrieved order has lineitems.
+     * @throws LegoException
      */
     @Test
-    public void testGetOrder2()
+    public void testGetOrder2() throws LegoException
     {
         OrderDTO order = OrderDAO.getOrder(1);
         assertTrue(order.getLineItems().size() > 0); 
@@ -96,11 +99,35 @@ public class OrderDAOJUnitTest
     
     /**
      * Test that retrieved orders first lineitem has brick.
+     * @throws LegoException
      */
     @Test
-    public void testGetOrder3()
+    public void testGetOrder3() throws LegoException
     {
         OrderDTO order = OrderDAO.getOrder(1);
         assertTrue(order.getLineItems().get(0).getBrick() != null);
+    }
+    
+    /**
+     * Test creation of order.
+     * @throws LegoException 
+     */
+    @Test
+    public void testCreateOrder() throws LegoException
+    {
+        ArrayList<LineItemDTO> lineitems = new ArrayList();
+        lineitems.add(new LineItemDTO(1,2));
+        lineitems.add(new LineItemDTO(2,3));
+        lineitems.add(new LineItemDTO(3,4));
+        
+        OrderDTO newOrder = OrderDAO.createOrder(1, lineitems);
+        assertNotNull(newOrder);
+        
+    }
+    
+    @Test
+    public void testShipOrder() throws LegoException
+    {
+        assertTrue(OrderDAO.shipOrder(1));
     }
 }

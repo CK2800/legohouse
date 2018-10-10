@@ -38,18 +38,31 @@ public class BrickDTO
     /**
      * Maps a brick from a database ResultSet tuple into a BrickDTO object.
      * @param rs ResultSet of tuples.
+     * @param idCol Name of column in ResultSet that holds id of brick.
+     * @param widthCol Name of column in ResultSet that holds width of brick.
+     * @param lengthCol Name of column in ResultSet that holds length of brick.
      * @return BrickDTO object with data initialized.
      * @throws LegoException
      */
-    public static BrickDTO mapBrick(ResultSet rs) throws LegoException
+    public static BrickDTO mapBrick(ResultSet rs, String idCol, String widthCol, String lengthCol) throws LegoException
     {
         try
         {
-            return new BrickDTO(rs.getInt("id"), rs.getInt("width"), rs.getInt("length"));
+            return new BrickDTO(rs.getInt(idCol), rs.getInt(widthCol), rs.getInt(lengthCol));
         }
         catch(SQLException e)
         {
             throw new LegoException("Brick could not be found in the system.", e.getMessage(), "BrickDTO.mapBrick(ResultSet)");
         }
+    }
+    
+    /**
+     * Friendly string representation of the brick.
+     * @return String
+     */
+    @Override
+    public String toString()
+    {
+        return width + " x " + length;
     }
 }

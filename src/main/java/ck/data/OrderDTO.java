@@ -23,6 +23,12 @@ public class OrderDTO
     private Date shippedDate;
     private ArrayList<LineItemDTO> lineItems;
     
+    public int getId(){return id;}
+    public int getCustomerId(){return customerId;}
+    public Date getOrderDate(){return orderDate;}
+    public Date getShippedDate(){return shippedDate;}
+    public ArrayList<LineItemDTO> getLineItems(){return lineItems;}
+    
     /**
      * Creates an OrderDTO object with all attributes initialized except its line items.
      * @see setLineItems(...)

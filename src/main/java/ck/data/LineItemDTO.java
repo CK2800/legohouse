@@ -19,10 +19,12 @@ public class LineItemDTO
     private int orderId;
     private int brickId;
     private int qty;
+    private BrickDTO brickDTO;
     // getters.
     public int getOrderId(){return orderId;}
     public int getBrickId(){return brickId;}
-    private int getQty(){return qty;}
+    public BrickDTO getBrick(){return brickDTO;}
+    public int getQty(){return qty;}
     
     /**
      * Constructor with all attributes initialized.
@@ -46,6 +48,15 @@ public class LineItemDTO
     {
         this.brickId = brickId;
         this.qty = qty;
+    }
+    
+    /**
+     * Sets brick for this lineitem.
+     * @param brickDTO BrickDTO object.
+     */
+    public void setBrick(BrickDTO brickDTO)
+    {
+        this.brickDTO = brickDTO;
     }
     
     public static LineItemDTO mapLineItem(ResultSet rs) throws LegoException

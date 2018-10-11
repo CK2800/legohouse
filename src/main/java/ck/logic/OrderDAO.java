@@ -38,6 +38,12 @@ public class OrderDAO
     private static final String CREATE_LINEITEM_SQL = "INSERT INTO lineitems(orderId, brickId, qty) VALUES (?, ?, ?);";
     private static final String SHIP_ORDER_SQL      = "UPDATE orders SET shippedDate = now() WHERE id = ?;";
     
+    /**
+     * Ships an order.      
+     * @param orderId Id of order to ship.
+     * @return true if exactly one order is shipped, false otherwise (multiple orders are not shipped).
+     * @throws LegoException 
+     */
     public static boolean shipOrder(int orderId) throws LegoException
     {
         int recordsAffected = 0;

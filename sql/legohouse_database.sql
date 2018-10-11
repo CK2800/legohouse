@@ -6,23 +6,24 @@ use legohouse;
 DROP TABLE IF EXISTS lineitems;
 DROP TABLE IF EXISTS bricks;
 DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS users;
 
-CREATE TABLE customers(
+CREATE TABLE users(
 	id int PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(30) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(30) NOT NULL    
+    password VARCHAR(30) NOT NULL,
+    employee boolean NOT NULL DEFAULT false
 );
 
 CREATE TABLE orders(
 	id int PRIMARY KEY AUTO_INCREMENT,
-    customerId int NOT NULL,
+    userId int NOT NULL,
     orderDate datetime NOT NULL DEFAULT NOW(), -- order date defaults to now().
     shippedDate datetime, -- order shipment date
-    CONSTRAINT fk_orders_customers
-    FOREIGN KEY(customerId)
-    REFERENCES customers(id)
+    CONSTRAINT fk_orders_users
+    FOREIGN KEY(userId)
+    REFERENCES users(id)
     ON DELETE NO ACTION -- a customer with orders cannot be deleted.
 );
 

@@ -18,13 +18,13 @@ import java.util.ArrayList;
 public class OrderDTO
 {
     private int id;
-    private int customerId;
+    private int userId;
     private Date orderDate;
     private Date shippedDate;
     private ArrayList<LineItemDTO> lineItems;
     
     public int getId(){return id;}
-    public int getCustomerId(){return customerId;}
+    public int getUserId(){return userId;}
     public Date getOrderDate(){return orderDate;}
     public Date getShippedDate(){return shippedDate;}
     public ArrayList<LineItemDTO> getLineItems(){return lineItems;}
@@ -40,7 +40,7 @@ public class OrderDTO
     public OrderDTO(int id, int customerId, Date orderDate, Date shippedDate)
     {
         this.id = id;
-        this.customerId = customerId;
+        this.userId = customerId;
         this.orderDate = orderDate;
         this.shippedDate = shippedDate;
         
@@ -65,7 +65,7 @@ public class OrderDTO
     {
         try
         {
-            return new OrderDTO(rs.getInt("id"), rs.getInt("customerId"), rs.getDate("orderDate"), rs.getDate("shippedDate"));
+            return new OrderDTO(rs.getInt("id"), rs.getInt("userId"), rs.getDate("orderDate"), rs.getDate("shippedDate"));
         }
         catch(SQLException e)
         {

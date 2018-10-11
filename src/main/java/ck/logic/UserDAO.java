@@ -20,7 +20,7 @@ public class UserDAO
 {
     
     private static final String CREATE_USER_SQL = "INSERT INTO users(username, email, password, employee) VALUES (?,?,?,?);";
-    private static final String LOGIN_USER_SQL = "SELECT * FROM users WHERE email = ? AND password = ?;";
+    private static final String VALIDATE_USER_SQL = "SELECT * FROM users WHERE email = ? AND password = ?;";
     
     /**
      * Create a new user.
@@ -71,23 +71,17 @@ public class UserDAO
         {
             // Get connected.
             Connection connection = DbConnection.getConnection();
-            PreparedStatement pstm = connection.prepareStatement(LOGIN_USER_SQL);
+            PreparedStatement pstm = connection.prepareStatement(VALIDATE_USER_SQL);
             pstm.setString(1, email);
             pstm.setString(2, password);
             // execute query.
             ResultSet rs = pstm.executeQuery();
-            if (rs.next()) // user found.
-            {
-                return UserDTO.mapUser(rs);                
-            }
-            else
-            {
-                throw new LegoException("User could not be validated", "Username or password incorrect", "UserDAO.loginUser(String, String)");
-            }            
+            rs.next();            
+            return UserDTO.mapUser(rs);                
         }
         catch(Exception e)
         {
-            throw new LegoException(e.getMessage(), e.getMessage(), "UserDAO.loginUser(String, String)");
+            throw new LegoException("User could not be validated", e.getMessage(), "UserDAO.loginUser(String, String)");
         }
     }
     

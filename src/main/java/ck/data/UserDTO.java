@@ -89,6 +89,18 @@ public class UserDTO
                 this.username.equals(otherUserDTO.getUsername()));                
     }
     
+    @Override
+    public String toString()
+    {
+        String strUser = "id: $id, username: $username, email: $email, type: $type";
+        strUser = strUser.replace("$id", String.valueOf(id));
+        strUser = strUser.replace("$username", username);
+        strUser = strUser.replace("$email", email);
+        strUser = strUser.replace("$type", (employee ? "employee" : "customer"));
+        
+        return strUser;
+    }
+    
         
     
 }

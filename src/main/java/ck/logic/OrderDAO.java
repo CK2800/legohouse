@@ -26,7 +26,7 @@ public class OrderDAO
     /**
      * Get details for order including its lineitems and brick of each line item.
      */
-    private static final String GET_ORDER_SQL = "SELECT o.id, o.customerId, o.orderDate, o.shippedDate, " +
+    private static final String GET_ORDER_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, " +
                                                 "l.orderId, l.brickId, l.qty, " +
                                                 "b.length, b.width " +
                                                 "FROM orders o INNER JOIN lineitems l " + 
@@ -34,7 +34,7 @@ public class OrderDAO
                                                 "INNER JOIN bricks b ON l.brickId = b.id " + 
                                                 "WHERE o.id = ?;";
     
-    private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(customerId) VALUES (?);"; 
+    private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(userId) VALUES (?);"; 
     private static final String CREATE_LINEITEM_SQL = "INSERT INTO lineitems(orderId, brickId, qty) VALUES (?, ?, ?);";
     private static final String SHIP_ORDER_SQL      = "UPDATE orders SET shippedDate = now() WHERE id = ?;";
     

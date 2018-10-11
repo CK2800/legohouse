@@ -44,7 +44,7 @@ public class UserDAOJUnitTest
     
     @AfterClass
     public static void tearDownClass() throws SQLException
-    {        
+    {   
         // Delete user created in TestCreateEmployee.
         String SQL = "DELETE FROM users WHERE email = 'anders@and.dk' OR email = 'andersine@and.dk';";
         PreparedStatement pstm = connection.prepareStatement(SQL);
@@ -74,7 +74,7 @@ public class UserDAOJUnitTest
     
     @Test
     public void testCreateEmployee() throws LegoException
-    {        
+    {   
         String username = "Anders";
         String email = "anders@and.dk";
         String password = "rapraprap";
@@ -97,14 +97,13 @@ public class UserDAOJUnitTest
     public void testValidateUser() throws LegoException
     {        
         UserDTO user = UserDAO.validateUser("anders@and.dk", "rapraprap");
-        System.out.println("User validated: " + user.getEmail() + " is an employee ? " + user.getEmployee());
+        System.out.println("User validated: " + user.toString());
         assertNotNull(user);
     }
     @Test(expected = LegoException.class )
     public void testValidateUserFails() throws LegoException
     {
         // Using a wrong password should yield a LegoException.
-        UserDTO user = UserDAO.validateUser("anders@and.dk", "izNoGood");
-        
+        UserDTO user = UserDAO.validateUser("anders@and.dk", "izNoGood");        
     }
 }

@@ -26,15 +26,29 @@ public class ShipOrderCommand extends Command
         UserDTO loggedInUser = (UserDTO)request.getSession().getAttribute("userDTO");
         // Get user from database to validate equality.        
         UserDTO userDTO = UserDAO.validateUser(loggedInUser.getEmail(), loggedInUser.getPassword());        
+        // Get order id from request.
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
         // Check if logged in user is in fact an employee.
         if (loggedInUser.equals(userDTO) && loggedInUser.getEmployee())
-        {
-            // Get order id from request.
-            int orderId = Integer.parseInt(request.getParameter("orderId"));
+        {            
             // Is order shipped, return to employee page.
             if (OrderDAO.shipOrder(orderId))
                 return Pages.EMPLOYEE;
             else
                 throw new LegoException("Order was not shipped.", "Order was not shipped.", "ShipOrderCommand.execute()");            
+        }
+        else // not an employee - invalidate session and throw an error.
+        {
+            LoginCommand.invalidateSession(request);
+            String friendlyMessage = "You are not allowed to ship orders.";
+            String detailedMessage = "User $userId tried to ship order $orderId. Either user in session has been manipulated or user is no employee:\n $user1\n$user2";
+            detailedMessage = detailedMessage.replace("$userId", String.valueOf(userDTO.getId()));
+            detailedMessage = detailedMessage.replace("$orderId", String.valueOf(orderId));
+            detailedMessage = detailedMessage.replace("$user1", loggedInUser.toString());
+            detailedMessage = detailedMessage.replace("$user2", userDTO.toString());
+            String originOfException = "ShipOrderCommand.execute()";
+            
+            throw new LegoException(friendlyMessage, detailedMessage, originOfException);
+        }
     }
 }

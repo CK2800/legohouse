@@ -20,7 +20,16 @@ import ck.presentation.command.*;
 @WebServlet(name = "FrontController", urlPatterns = { "/FrontController" })
 public class FrontController extends HttpServlet
 {
-
+    /**
+     * Name of variable in the request object that contains an error text. 
+     */
+    public static final String ERROR_TEXT = "errorText";
+    /**
+     * Name of variable in form or querystring that contains path to return to if error occurs.
+     */
+    public static final String ERROR_PATH = "errorPath";
+    
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -39,20 +48,21 @@ public class FrontController extends HttpServlet
             Command command = Command.from(request);
             // Execute the command and get the view.
             String view = command.execute(request, response);
-            // Forward the request to the resulting servlet - 
-            // remember, jsp is compiled, run and the result sent to browser.
+            // Forward the request to the resulting servlet that must reside in WEB-INF folder.             
+            // Remember, jsp is compiled, run and the result sent to browser.
             request.getRequestDispatcher("/WEB-INF/" + view + ".jsp").forward(request, response);
         }
         catch(Exception e)
         {
             // save error message in request.
-            request.setAttribute("errorText", e.getMessage());
-            // If the request has specified a path to return to, we will do this now.
+            request.setAttribute(ERROR_TEXT, e.getMessage());
+            // If the request has specified a path to return to, we will do this now. 
+            // The path must be the complete path from root.
             String view = request.getParameter("errorPath");
             if (view == null) // no error path, go to home/index
                 view = Pages.INDEX;            
             
-            request.getRequestDispatcher("/WEB-INF/" + view + ".jsp").forward(request, response);
+            request.getRequestDispatcher(view + ".jsp").forward(request, response);
         }
     }
 

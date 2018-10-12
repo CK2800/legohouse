@@ -7,8 +7,11 @@ package ck.presentation.command;
 
 import ck.data.UserDTO;
 import ck.logic.LegoException;
+import ck.logic.OrderDAO;
 import ck.logic.UserDAO;
 import ck.presentation.Pages;
+import ck.presentation.viewmodels.OrderUserComposite;
+import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -26,8 +29,7 @@ public class LoginCommand extends Command
         invalidateSession(request);
         
         // Get info from request.
-        String email = request.getParameter("email");
-        String username = request.getParameter("username");
+        String email = request.getParameter("email");        
         String password = request.getParameter("password");
         
         // Validate user.
@@ -35,7 +37,21 @@ public class LoginCommand extends Command
         // log in user.
         loginUser(request, userDTO);
         
-        return userDTO.getEmployee() ? Pages.EMPLOYEE : Pages.CUSTOMER;
+        // Employee must se a list of unshipped orders.
+        if (userDTO.isEmployee())
+        {
+            ArrayList<OrderUserComposite> unshippedOrders = OrderDAO.getUnshippedOrders();
+            request.setAttribute("unshippedOrders", unshippedOrders);            
+        }
+        else // Customer must see a list of his/her orders.
+        {
+            
+        }
+            
+        
+        
+        
+        return userDTO.isEmployee() ? Pages.EMPLOYEE : Pages.CUSTOMER;
     }
 
     /**

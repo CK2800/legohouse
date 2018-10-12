@@ -27,20 +27,13 @@ public class CreateUserCommand extends Command
         String password = request.getParameter("password");
         String password2 = request.getParameter("password2");
         boolean employee = Boolean.parseBoolean(request.getParameter("employee"));
-
-        // do passwords match?
-        if (password.equals(password2))            
-        {
-            UserDTO userDTO = UserDAO.createUser(username, email, password, employee);
-
-            // Log in the new customer.
-            LoginCommand.invalidateSession(request);
-            LoginCommand.loginUser(request, userDTO);                
-
-            return employee ? Pages.EMPLOYEE : Pages.CUSTOMER;
-        }
-        else
-            throw new LegoException("Passwords do not match.", "Passwords do not match.", "CreateCustomerCommand.execute()");                            
         
+        UserDTO userDTO = UserDAO.createUser(username, email, password, password2, employee);
+
+        // Log in the new customer.
+        LoginCommand.invalidateSession(request);
+        LoginCommand.loginUser(request, userDTO);                
+
+        return employee ? Pages.EMPLOYEE : Pages.CUSTOMER;
     }    
 }

@@ -29,7 +29,7 @@ public class ShipOrderCommand extends Command
         // Get order id from request.
         int orderId = Integer.parseInt(request.getParameter("orderId"));
         // Check if logged in user is in fact an employee.
-        if (loggedInUser.equals(userDTO) && loggedInUser.getEmployee())
+        if (loggedInUser.equals(userDTO) && loggedInUser.isEmployee())
         {            
             // Is order shipped, return to employee page.
             if (OrderDAO.shipOrder(orderId))

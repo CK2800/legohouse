@@ -23,6 +23,7 @@ public class OrderDTO
     private Date shippedDate;
     private ArrayList<LineItemDTO> lineItems;
     
+    
     public int getId(){return id;}
     public int getUserId(){return userId;}
     public Date getOrderDate(){return orderDate;}
@@ -31,7 +32,7 @@ public class OrderDTO
     
     /**
      * Creates an OrderDTO object with all attributes initialized except its line items.
-     * @see setLineItems(...)
+     * @see setLineItems(...)     
      * @param id id of order.
      * @param customerId id of customer.
      * @param orderDate date of order.
@@ -57,6 +58,7 @@ public class OrderDTO
     
     /**
      * Maps an order from a database ResultSet tuple into a OrderDTO object.
+     * The ResultSet must have following columns: id, userId, orderDate, shippedDate.
      * @param rs ResultSet of tuples.
      * @return OrderDTO object with data initialized.
      * @throws LegoException 

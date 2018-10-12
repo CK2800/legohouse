@@ -9,6 +9,7 @@ import ck.data.BrickDTO;
 import ck.data.DbConnection;
 import ck.data.LineItemDTO;
 import ck.data.OrderDTO;
+import ck.presentation.viewmodels.OrderUserComposite;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,9 +35,74 @@ public class OrderDAO
                                                 "INNER JOIN bricks b ON l.brickId = b.id " + 
                                                 "WHERE o.id = ?;";
     
+    private static final String UNSHIPPED_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, u.username, u.email " +
+                                                       "FROM orders o INNER JOIN users u ON o.userId = u.id " +
+                                                       "WHERE o.shippedDate IS null";
+    
     private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(userId) VALUES (?);"; 
     private static final String CREATE_LINEITEM_SQL = "INSERT INTO lineitems(orderId, brickId, qty) VALUES (?, ?, ?);";
     private static final String SHIP_ORDER_SQL      = "UPDATE orders SET shippedDate = now() WHERE id = ?;";
+    private static final String GET_USER_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate FROM orders o WHERE userId = ?;";
+    
+    
+    /**
+     * Gets a list of a users orders.
+     * @param userId 
+     * @return ArrayList of OrderDTO objects.
+     * @throws LegoException 
+     */
+    public static ArrayList<OrderDTO> getUserOrders(int userId) throws LegoException
+    {
+        ArrayList<OrderDTO> orders = new ArrayList<>();
+        try
+        {
+            Connection connection = DbConnection.getConnection();
+            PreparedStatement pstm = connection.prepareStatement(GET_USER_ORDERS_SQL);
+            pstm.setInt(1, userId);
+            try(ResultSet rs = pstm.executeQuery();)
+            {
+                while(rs.next())
+                    orders.add(OrderDTO.mapOrder(rs));
+            }
+        }
+        catch(Exception e)
+        {
+            throw new LegoException("Your orders could not be retrieved.", e.getMessage(), "OrderDAO.getUserOrders(int)");
+        }
+        
+        return orders;
+    }
+    
+    /**
+     * Gets a list of unshipped orders along with user information.
+     * @return ArrayList of OrderUserComposite objects.
+     */
+    public static ArrayList<OrderUserComposite> getUnshippedOrders() throws LegoException
+    {
+        ArrayList<OrderUserComposite> unshippedOrders = new ArrayList<>();
+        
+        try
+        {
+            // get connected
+            Connection connection = DbConnection.getConnection();
+            PreparedStatement pstm = connection.prepareStatement(UNSHIPPED_ORDERS_SQL);
+            try(ResultSet rs = pstm.executeQuery();)
+            {
+                // map each tuple to OrderDTO, add OrderDTO and additional user info to the collection.
+                while(rs.next())
+                {
+                    OrderDTO orderDTO = OrderDTO.mapOrder(rs);
+                    unshippedOrders.add(new OrderUserComposite(orderDTO, rs.getString("username"), rs.getString("email")));
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            throw new LegoException("Unshipped orders could not be retrieved", e.getMessage(), "OrderDAO.getUnshippedOrders()");
+        }
+        
+        return unshippedOrders;
+    }
     
     /**
      * Ships an order.      
@@ -169,5 +235,5 @@ public class OrderDAO
         
         return order;
         
-    }
+    }    
 }

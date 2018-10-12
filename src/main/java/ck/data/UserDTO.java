@@ -29,7 +29,7 @@ public class UserDTO
      * Indicates whether the user is an employee.
      * @return true if user is employee.
      */
-    public boolean getEmployee(){return employee;}
+    public boolean isEmployee(){return employee;}
     
     /**
      * Creates a new UserDTO object with all required arguments.

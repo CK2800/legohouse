@@ -8,6 +8,7 @@ package ck.logic;
 import ck.data.DbConnection;
 import ck.data.LineItemDTO;
 import ck.data.OrderDTO;
+import ck.presentation.viewmodels.OrderUserComposite;
 import java.sql.Connection;
 import java.util.ArrayList;
 import org.junit.After;
@@ -129,5 +130,20 @@ public class OrderDAOJUnitTest
     public void testShipOrder() throws LegoException
     {
         assertTrue(OrderDAO.shipOrder(1));
+    }
+    
+    @Test
+    public void testGetUserOrders() throws LegoException
+    {
+        ArrayList<OrderDTO> orders = OrderDAO.getUserOrders(1);
+        assertTrue(orders.size() > 0);
+    }
+    
+    @Test
+    public void testGetUnshippedOrders() throws LegoException
+    {
+        ArrayList<OrderUserComposite> orders = OrderDAO.getUnshippedOrders();
+        System.out.println(orders.get(0).toString());
+        assertTrue(orders.size() > 0);
     }
 }

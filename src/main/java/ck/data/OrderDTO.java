@@ -61,17 +61,10 @@ public class OrderDTO
      * The ResultSet must have following columns: id, userId, orderDate, shippedDate.
      * @param rs ResultSet of tuples.
      * @return OrderDTO object with data initialized.
-     * @throws LegoException 
+     * @throws SQLException 
      */
-    public static OrderDTO mapOrder(ResultSet rs) throws LegoException
-    {
-        try
-        {
-            return new OrderDTO(rs.getInt("id"), rs.getInt("userId"), rs.getDate("orderDate"), rs.getDate("shippedDate"));
-        }
-        catch(SQLException e)
-        {
-            throw new LegoException("Order could not be found in the system.", e.getMessage(), "OrderDTO.mapOrder(ResultSet)");
-        }
+    public static OrderDTO mapOrder(ResultSet rs) throws SQLException
+    {    
+        return new OrderDTO(rs.getInt("id"), rs.getInt("userId"), rs.getDate("orderDate"), rs.getDate("shippedDate"));    
     }
 }

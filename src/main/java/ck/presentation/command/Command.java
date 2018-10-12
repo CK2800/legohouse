@@ -19,9 +19,11 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class Command
 {
     public static final String LOGIN = "login";
+    public static final String LOGOUT = "logout";
     public static final String CREATE_ORDER = "createOrder";
     public static final String SHIP_ORDER = "shipOrder";
     public static final String CREATE_USER = "createUser";
+    public static final String SHOW_ORDER = "showOrder";
     
     public static String command;
     // HashMap of available commands.
@@ -37,6 +39,8 @@ public abstract class Command
         commands.put( CREATE_ORDER, new CreateOrderCommand() );
         commands.put( SHIP_ORDER, new ShipOrderCommand() );
         commands.put( CREATE_USER, new CreateUserCommand() );
+        commands.put( LOGOUT, new LogoutCommand() );
+        commands.put( SHOW_ORDER, new ShowOrderCommand() );
         
     }
     

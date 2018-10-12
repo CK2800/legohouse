@@ -5,7 +5,6 @@
  */
 package ck.data;
 
-import ck.logic.LegoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -59,17 +58,10 @@ public class LineItemDTO
         this.brickDTO = brickDTO;
     }
     
-    public static LineItemDTO mapLineItem(ResultSet rs) throws LegoException
-    {
-        try
-        {
-            return new LineItemDTO(rs.getInt("orderId"), rs.getInt("brickId"), rs.getInt("qty"));
-        }
-        catch(SQLException e)
-        {
-            throw new LegoException("Line item could not be found in database", e.getMessage(), "LineItemDTO.mapLineItem(ResultSet)");
-        }
-        
+    
+    public static LineItemDTO mapLineItem(ResultSet rs) throws SQLException
+    {        
+        return new LineItemDTO(rs.getInt("orderId"), rs.getInt("brickId"), rs.getInt("qty"));
     }
     
 }

@@ -37,11 +37,14 @@ public class LoginCommand extends Command
         // log in user.
         loginUser(request, userDTO);
         
-        // Employee must se a list of unshipped orders.
+        // Employee must se a list of shipped / unshipped orders.
         if (userDTO.isEmployee())
         {
-            ArrayList<OrderUserComposite> unshippedOrders = OrderDAO.getUnshippedOrders();
+            ArrayList<OrderUserComposite> unshippedOrders = OrderDAO.getOrders(false);
+            ArrayList<OrderUserComposite> shippedOrders = OrderDAO.getOrders(true);
+            
             request.setAttribute("unshippedOrders", unshippedOrders);            
+            request.setAttribute("shippedOrders", shippedOrders);
         }
         else // Customer must see a list of his/her orders.
         {

@@ -52,18 +52,11 @@ public class UserDTO
      * Maps a user from a database ResultSet tuple into a UserDTO object.
      * @param rs ResultSet of tuples.
      * @return UserDTO object with data initialized.
-     * @throws LegoException 
+     * @throws SQLException 
      */
-    public static UserDTO mapUser(ResultSet rs) throws LegoException
+    public static UserDTO mapUser(ResultSet rs) throws SQLException
     {
-        try
-        {
-            return new UserDTO(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getBoolean("employee"));
-        }
-        catch(SQLException e)
-        {
-            throw new LegoException("User could not be found in the system.", e.getMessage(), "UserDTO.mapUser(ResultSet)");
-        }
+        return new UserDTO(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getBoolean("employee"));        
     }
     
     /**

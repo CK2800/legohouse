@@ -5,9 +5,7 @@
 --%>
 <%@page import="ck.presentation.FrontController"%>
 <%
-    String errorText = (String)request.getAttribute(FrontController.ERROR_TEXT);
-    if (errorText != null)
-        errorText = "<h2>Error: " + errorText + "<h2>";
+    String errorText = (String)request.getAttribute(FrontController.ERROR_TEXT);    
 %>
 <%@page import="ck.presentation.command.Command"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

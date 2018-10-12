@@ -37,11 +37,11 @@ public class OrderDAO
     
     private static final String UNSHIPPED_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, u.username, u.email " +
                                                        "FROM orders o INNER JOIN users u ON o.userId = u.id " +
-                                                       "WHERE o.shippedDate IS null";
+                                                       "WHERE o.shippedDate IS $NOT null;";
     
     private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(userId) VALUES (?);"; 
     private static final String CREATE_LINEITEM_SQL = "INSERT INTO lineitems(orderId, brickId, qty) VALUES (?, ?, ?);";
-    private static final String SHIP_ORDER_SQL      = "UPDATE orders SET shippedDate = now() WHERE id = ?;";
+    private static final String SHIP_ORDER_SQL      = "UPDATE orders SET shippedDate = now() WHERE shippedDate is NULL AND id = ?;";
     private static final String GET_USER_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate FROM orders o WHERE userId = ?;";
     
     
@@ -74,25 +74,32 @@ public class OrderDAO
     }
     
     /**
-     * Gets a list of unshipped orders along with user information.
+     * Gets a list of orders along with user information.
+     * @param shipped indicates if list has shipped (true) or unshipped (false) orders.
      * @return ArrayList of OrderUserComposite objects.
      */
-    public static ArrayList<OrderUserComposite> getUnshippedOrders() throws LegoException
+    public static ArrayList<OrderUserComposite> getOrders(boolean shipped) throws LegoException
     {
-        ArrayList<OrderUserComposite> unshippedOrders = new ArrayList<>();
-        
+        ArrayList<OrderUserComposite> orders = new ArrayList<>();        
         try
         {
             // get connected
             Connection connection = DbConnection.getConnection();
-            PreparedStatement pstm = connection.prepareStatement(UNSHIPPED_ORDERS_SQL);
+            PreparedStatement pstm;
+            String sql = UNSHIPPED_ORDERS_SQL;
+            if (shipped)
+                sql = sql.replace("$NOT", "NOT");               
+            else
+                sql = sql.replace("$NOT", "");
+            
+            pstm = connection.prepareStatement(sql);                
             try(ResultSet rs = pstm.executeQuery();)
             {
                 // map each tuple to OrderDTO, add OrderDTO and additional user info to the collection.
                 while(rs.next())
                 {
                     OrderDTO orderDTO = OrderDTO.mapOrder(rs);
-                    unshippedOrders.add(new OrderUserComposite(orderDTO, rs.getString("username"), rs.getString("email")));
+                    orders.add(new OrderUserComposite(orderDTO, rs.getString("username"), rs.getString("email")));
                 }
             }
         }
@@ -101,13 +108,13 @@ public class OrderDAO
             throw new LegoException("Unshipped orders could not be retrieved", e.getMessage(), "OrderDAO.getUnshippedOrders()");
         }
         
-        return unshippedOrders;
+        return orders;
     }
     
     /**
      * Ships an order.      
      * @param orderId Id of order to ship.
-     * @return true if exactly one order is shipped, false otherwise (multiple orders are not shipped).
+     * @return true if exactly one UNSHIPPED order is shipped, false otherwise (multiple orders are not shipped).
      * @throws LegoException 
      */
     public static boolean shipOrder(int orderId) throws LegoException
@@ -120,7 +127,7 @@ public class OrderDAO
             Connection connection = DbConnection.getConnection();                        
             // store the current auto-commit state.
             autocommit = connection.getAutoCommit();
-            // Dont auto commit changes to database.
+            // Don't auto commit changes to database.
             connection.setAutoCommit(false);
             PreparedStatement pstm = connection.prepareStatement(SHIP_ORDER_SQL);
             pstm.setInt(1, orderId);

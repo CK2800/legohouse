@@ -14,19 +14,19 @@ public class Pages
     /**
      * Showing home or index page.
      */
-    public static final String HOME = "index";
-    public static final String INDEX = "index";
+    public static final String HOME = "index.jsp";
+    public static final String INDEX = "index.jsp";
     /**
      * Showing the customer page.
      */
-    public static final String CUSTOMER = "customer";
+    public static final String CUSTOMER = "/WEB-INF/customer.jsp";
     /**
      * Showing the employee page.
      */
-    public static final String EMPLOYEE = "employee";
+    public static final String EMPLOYEE = "/WEB-INF/employee.jsp";
     /**
      * Showing page with an order and its details.
      */
-    public static final String ORDER = "order";
+    public static final String ORDER = "/WEB-INF/order.jsp";
     
 }

@@ -5,6 +5,7 @@
  */
 package ck.presentation;
 
+import ck.logic.LegoException;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -50,19 +51,19 @@ public class FrontController extends HttpServlet
             String view = command.execute(request, response);
             // Forward the request to the resulting servlet that must reside in WEB-INF folder.             
             // Remember, jsp is compiled, run and the result sent to browser.
-            request.getRequestDispatcher("/WEB-INF/" + view + ".jsp").forward(request, response);
+            request.getRequestDispatcher(view).forward(request, response);
         }
-        catch(Exception e)
+        catch(LegoException e)
         {
             // save error message in request.
             request.setAttribute(ERROR_TEXT, e.getMessage());
             // If the request has specified a path to return to, we will do this now. 
             // The path must be the complete path from root.
-            String view = request.getParameter("errorPath");
+            String view = request.getParameter(ERROR_PATH);
             if (view == null) // no error path, go to home/index
                 view = Pages.INDEX;            
             
-            request.getRequestDispatcher(view + ".jsp").forward(request, response);
+            request.getRequestDispatcher(view).forward(request, response);
         }
     }
 

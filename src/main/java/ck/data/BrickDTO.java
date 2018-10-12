@@ -5,7 +5,6 @@
  */
 package ck.data;
 
-import ck.logic.LegoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -42,18 +41,11 @@ public class BrickDTO
      * @param widthCol Name of column in ResultSet that holds width of brick.
      * @param lengthCol Name of column in ResultSet that holds length of brick.
      * @return BrickDTO object with data initialized.
-     * @throws LegoException
+     * @throws SQLException
      */
-    public static BrickDTO mapBrick(ResultSet rs, String idCol, String widthCol, String lengthCol) throws LegoException
-    {
-        try
-        {
-            return new BrickDTO(rs.getInt(idCol), rs.getInt(widthCol), rs.getInt(lengthCol));
-        }
-        catch(SQLException e)
-        {
-            throw new LegoException("Brick could not be found in the system.", e.getMessage(), "BrickDTO.mapBrick(ResultSet)");
-        }
+    public static BrickDTO mapBrick(ResultSet rs, String idCol, String widthCol, String lengthCol) throws SQLException
+    {        
+        return new BrickDTO(rs.getInt(idCol), rs.getInt(widthCol), rs.getInt(lengthCol));        
     }
     
     /**

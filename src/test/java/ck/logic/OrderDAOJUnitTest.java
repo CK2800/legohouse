@@ -10,6 +10,8 @@ import ck.data.LineItemDTO;
 import ck.data.OrderDTO;
 import ck.presentation.viewmodels.OrderUserComposite;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -127,8 +129,12 @@ public class OrderDAOJUnitTest
     }
     
     @Test
-    public void testShipOrder() throws LegoException
+    public void testShipOrder() throws LegoException, SQLException
     {
+        String SQL = "UPDATE orders SET shippedDate = null WHERE id = 1;";
+        PreparedStatement pstm = connection.prepareStatement(SQL);
+        pstm.execute();
+        
         assertTrue(OrderDAO.shipOrder(1));
     }
     
@@ -142,7 +148,7 @@ public class OrderDAOJUnitTest
     @Test
     public void testGetUnshippedOrders() throws LegoException
     {
-        ArrayList<OrderUserComposite> orders = OrderDAO.getUnshippedOrders();
+        ArrayList<OrderUserComposite> orders = OrderDAO.getOrders(false);
         System.out.println(orders.get(0).toString());
         assertTrue(orders.size() > 0);
     }

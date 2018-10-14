@@ -22,10 +22,12 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <%= order %>
-        <div class="error">
-            <%= errorText == null ? "" : "Error: " + errorText %>
+        <div id="container">
+            <h1>Hello World!</h1>
+            <%= order %>
+            <div class="error">
+                <%= errorText == null ? "" : "Error: " + errorText %>
+            </div>
         </div>
     </body>
 </html>

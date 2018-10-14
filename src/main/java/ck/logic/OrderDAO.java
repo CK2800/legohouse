@@ -9,7 +9,7 @@ import ck.data.BrickDTO;
 import ck.data.DbConnection;
 import ck.data.LineItemDTO;
 import ck.data.OrderDTO;
-import ck.presentation.viewmodels.OrderUserComposite;
+import ck.data.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,44 +25,66 @@ import java.util.ArrayList;
 public class OrderDAO
 {
     /**
-     * Get details for order including its lineitems and brick of each line item.
+     * Get details for order including its user, lineitems and brick of each line item.
      */
     private static final String GET_ORDER_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, " +
                                                 "l.orderId, l.brickId, l.qty, " +
-                                                "b.length, b.width " +
+                                                "b.length, b.width, " +
+                                                "u.username, u.email, u.employee " +
                                                 "FROM orders o INNER JOIN lineitems l " + 
                                                 "ON o.id = l.orderId " + 
                                                 "INNER JOIN bricks b ON l.brickId = b.id " + 
+                                                "INNER JOIN users u ON o.userId = u.id " +
                                                 "WHERE o.id = ?;";
     
-    private static final String UNSHIPPED_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, u.username, u.email " +
-                                                       "FROM orders o INNER JOIN users u ON o.userId = u.id " +
-                                                       "WHERE o.shippedDate IS $NOT null;";
+    /**
+     * Generic sql for retrieving a list of orders matching an 
+     * optional WHERE clause ordered by an optional ORDERBY clause.
+     */
+    private static final String GET_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, u.username, u.email, u.employee " +
+                                                       "FROM orders o INNER JOIN users u ON o.userId = u.id $WHERE $ORDERBY;";
     
     private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(userId) VALUES (?);"; 
     private static final String CREATE_LINEITEM_SQL = "INSERT INTO lineitems(orderId, brickId, qty) VALUES (?, ?, ?);";
     private static final String SHIP_ORDER_SQL      = "UPDATE orders SET shippedDate = now() WHERE shippedDate is NULL AND id = ?;";
-    private static final String GET_USER_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate FROM orders o WHERE userId = ?;";
+    //private static final String GET_USER_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate FROM orders o WHERE userId = ?;";
     
     
     /**
-     * Gets a list of a users orders.
-     * @param userId 
+     * Gets a list of orders.
+     * If user is an employee, all orders will be returned.
+     * If user is not an employee, the users orders will be returned.
+     * @param userId Id of user
+     * @param employee Indicates whether the user is an employee.
      * @return ArrayList of OrderDTO objects.
      * @throws LegoException 
      */
-    public static ArrayList<OrderDTO> getUserOrders(int userId) throws LegoException
+    public static ArrayList<OrderDTO> getOrders(int userId, boolean employee) throws LegoException
     {
         ArrayList<OrderDTO> orders = new ArrayList<>();
         try
         {
             Connection connection = DbConnection.getConnection();
-            PreparedStatement pstm = connection.prepareStatement(GET_USER_ORDERS_SQL);
-            pstm.setInt(1, userId);
+            //PreparedStatement pstm = connection.prepareStatement(GET_USER_ORDERS_SQL);
+            // Append correct WHERE clause to generic sql
+            String sql = GET_ORDERS_SQL;
+            sql = sql.replace("$WHERE", employee ? "" : "WHERE userId = ?"); // No where clause for employees.
+            //sql = sql.replace("$ORDERBY", employee ? "ORDER BY shippedDate ASC" : "ORDER BY orderDate DESC"); 
+            sql = sql.replace("$ORDERBY", "ORDER BY orderDate DESC"); 
+            PreparedStatement pstm = connection.prepareStatement(sql);
+            if (!employee) // customers id must be parsed in.
+                pstm.setInt(1, userId);
             try(ResultSet rs = pstm.executeQuery();)
             {
                 while(rs.next())
-                    orders.add(OrderDTO.mapOrder(rs));
+                {
+                    OrderDTO order = OrderDTO.mapOrder(rs);
+                    // create user once first (without storing the password - should not be retrievable in client).                    
+                    UserDTO user = new UserDTO(rs.getInt("userId"), rs.getString("username"), null, rs.getString("email"), rs.getBoolean("employee") );                    
+                    // add user to order.
+                    order.setUserDTO(user);
+                    orders.add(order);
+                }
             }
         }
         catch(Exception e)
@@ -73,43 +95,46 @@ public class OrderDAO
         return orders;
     }
     
+    
+            
+    
     /**
      * Gets a list of orders along with user information.
      * @param shipped indicates if list has shipped (true) or unshipped (false) orders.
      * @return ArrayList of OrderUserComposite objects.
      */
-    public static ArrayList<OrderUserComposite> getOrders(boolean shipped) throws LegoException
-    {
-        ArrayList<OrderUserComposite> orders = new ArrayList<>();        
-        try
-        {
-            // get connected
-            Connection connection = DbConnection.getConnection();
-            PreparedStatement pstm;
-            String sql = UNSHIPPED_ORDERS_SQL;
-            if (shipped)
-                sql = sql.replace("$NOT", "NOT");               
-            else
-                sql = sql.replace("$NOT", "");
-            
-            pstm = connection.prepareStatement(sql);                
-            try(ResultSet rs = pstm.executeQuery();)
-            {
-                // map each tuple to OrderDTO, add OrderDTO and additional user info to the collection.
-                while(rs.next())
-                {
-                    OrderDTO orderDTO = OrderDTO.mapOrder(rs);
-                    orders.add(new OrderUserComposite(orderDTO, rs.getString("username"), rs.getString("email")));
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            throw new LegoException("Unshipped orders could not be retrieved", e.getMessage(), "OrderDAO.getUnshippedOrders()");
-        }
-        
-        return orders;
-    }
+//    public static ArrayList<OrderUserComposite> getOrders(boolean shipped) throws LegoException
+//    {
+//        ArrayList<OrderUserComposite> orders = new ArrayList<>();        
+//        try
+//        {
+//            // get connected
+//            Connection connection = DbConnection.getConnection();
+//            PreparedStatement pstm;
+//            String sql = "";// UNSHIPPED_ORDERS_SQL;
+//            if (shipped)
+//                sql = sql.replace("$NOT", "NOT");               
+//            else
+//                sql = sql.replace("$NOT", "");
+//            
+//            pstm = connection.prepareStatement(sql);                
+//            try(ResultSet rs = pstm.executeQuery();)
+//            {
+//                // map each tuple to OrderDTO, add OrderDTO and additional user info to the collection.
+//                while(rs.next())
+//                {
+//                    OrderDTO orderDTO = OrderDTO.mapOrder(rs);
+//                    orders.add(new OrderUserComposite(orderDTO, rs.getString("username"), rs.getString("email")));
+//                }
+//            }
+//        }
+//        catch(Exception e)
+//        {
+//            throw new LegoException("Unshipped orders could not be retrieved", e.getMessage(), "OrderDAO.getUnshippedOrders()");
+//        }
+//        
+//        return orders;
+//    }
     
     /**
      * Ships an order.      
@@ -197,13 +222,15 @@ public class OrderDAO
     }
     /**
      * Retrieves an OrderDTO object for the specified order id.
+     * The OrderDTO User attribute is populated.
      * The OrderDTO lineItems are also populated as well as lineItems brick property.
      * @param orderId The orders id.
      * @return OrderDTO
      */
     public static OrderDTO getOrder(int orderId) throws LegoException
     {        
-        OrderDTO order = null;        
+        OrderDTO order = null;  
+        UserDTO user = null;
         ArrayList<LineItemDTO> lineItems = new ArrayList<LineItemDTO>();
         
         try
@@ -223,6 +250,11 @@ public class OrderDAO
                     {
                         order = OrderDTO.mapOrder(rs);
                     }
+                    // create user once first (without storing the password - should not be retrievable in client).
+                    if (user == null)
+                    {
+                        user = new UserDTO(rs.getInt("userId"), rs.getString("username"), null, rs.getString("email"), rs.getBoolean("employee") );
+                    }
                     
                     // map the lineitem.
                     LineItemDTO lineItemDTO = LineItemDTO.mapLineItem(rs);
@@ -233,6 +265,8 @@ public class OrderDAO
                 }  
                 // Add lineitems to orderDTO.
                 order.setLineItems(lineItems);
+                // Add user to orderDTO.
+                order.setUserDTO(user);
             }
         }
         catch(Exception e)

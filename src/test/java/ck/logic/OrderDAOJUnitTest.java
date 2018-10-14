@@ -111,6 +111,13 @@ public class OrderDAOJUnitTest
         assertTrue(order.getLineItems().get(0).getBrick() != null);
     }
     
+    @Test
+    public void testGetOrder4() throws LegoException
+    {
+        OrderDTO order = OrderDAO.getOrder(1);
+        assertNotNull(order.getUserDTO());
+    }
+    
     /**
      * Test creation of order.
      * @throws LegoException 
@@ -141,15 +148,16 @@ public class OrderDAOJUnitTest
     @Test
     public void testGetUserOrders() throws LegoException
     {
-        ArrayList<OrderDTO> orders = OrderDAO.getUserOrders(1);
+        ArrayList<OrderDTO> orders = OrderDAO.getOrders(1, false);
+        System.out.println("orders: " + orders.size());
         assertTrue(orders.size() > 0);
     }
     
     @Test
-    public void testGetUnshippedOrders() throws LegoException
+    public void testGetOrdersAsEmployee() throws LegoException
     {
-        ArrayList<OrderUserComposite> orders = OrderDAO.getOrders(false);
-        System.out.println(orders.get(0).toString());
+        ArrayList<OrderDTO> orders = OrderDAO.getOrders(1, true);        
+        System.out.println("orders: " + orders.size());
         assertTrue(orders.size() > 0);
     }
 }

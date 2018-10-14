@@ -22,6 +22,7 @@ public class OrderDTO
     private Date orderDate;
     private Date shippedDate;
     private ArrayList<LineItemDTO> lineItems;
+    private UserDTO userDTO;
     
     
     public int getId(){return id;}
@@ -29,10 +30,12 @@ public class OrderDTO
     public Date getOrderDate(){return orderDate;}
     public Date getShippedDate(){return shippedDate;}
     public ArrayList<LineItemDTO> getLineItems(){return lineItems;}
+    public UserDTO getUserDTO(){return userDTO;}
     
     /**
-     * Creates an OrderDTO object with all attributes initialized except its line items.
-     * @see setLineItems(...)     
+     * Creates an OrderDTO object with all attributes initialized except its line items and user.
+     * @see setLineItems(...) 
+     * @see setUserDTO(...)
      * @param id id of order.
      * @param customerId id of customer.
      * @param orderDate date of order.
@@ -47,6 +50,11 @@ public class OrderDTO
         
     }
     
+    public void setUserDTO(UserDTO userDTO)
+    {
+        this.userDTO = userDTO;
+    }
+    
     /**
      * Sets lineitems for this order.
      * @param lineItems ArrayList of LineItemDTO objects.
@@ -55,6 +63,7 @@ public class OrderDTO
     {
         this.lineItems = lineItems;
     }
+    
     
     /**
      * Maps an order from a database ResultSet tuple into a OrderDTO object.

@@ -5,12 +5,12 @@
  */
 package ck.presentation.command;
 
+import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
 import ck.logic.OrderDAO;
 import ck.logic.UserDAO;
 import ck.presentation.Pages;
-import ck.presentation.viewmodels.OrderUserComposite;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,24 +35,12 @@ public class ShipOrderCommand extends Command
             // Check if logged in user is in fact an employee.
             if (loggedInUser.equals(userDTO) && loggedInUser.isEmployee())
             {               
-                // set unshipped orders on request.
-                ArrayList<OrderUserComposite> unshippedOrders = OrderDAO.getOrders(false);
-                ArrayList<OrderUserComposite> shippedOrders = OrderDAO.getOrders(true);
-                request.setAttribute("unshippedOrders", unshippedOrders);   
-                request.setAttribute("shippedOrders", shippedOrders); 
-
-                // Is order shipped, remove it from collection and return to employee page.
+                
                 if (OrderDAO.shipOrder(orderId))
                 {   
-                    int i = 0;
-                    for (; i < unshippedOrders.size(); i++)
-                    {
-                        if (unshippedOrders.get(i).getOrder().getId() == orderId)
-                            break;
-                    }
-                    // move order from unshipped to shipped.
-                    shippedOrders.add(unshippedOrders.remove(i));                
-
+                    // set orders on request.
+                    ArrayList<OrderDTO> orders = OrderDAO.getOrders(userDTO.getId(), true);
+                    request.setAttribute("orders", orders);  
                     // return to employee page
                     return Pages.EMPLOYEE;
                 }

@@ -5,12 +5,12 @@
  */
 package ck.presentation.command;
 
+import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
 import ck.logic.OrderDAO;
 import ck.logic.UserDAO;
 import ck.presentation.Pages;
-import ck.presentation.viewmodels.OrderUserComposite;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,19 +40,17 @@ public class LoginCommand extends Command
         // Employee must se a list of shipped / unshipped orders.
         if (userDTO.isEmployee())
         {
-            ArrayList<OrderUserComposite> unshippedOrders = OrderDAO.getOrders(false);
-            ArrayList<OrderUserComposite> shippedOrders = OrderDAO.getOrders(true);
+            // Get list of orders. user id in parameters doesn't really matter, since we are employee.
+            ArrayList<OrderDTO> orders = OrderDAO.getOrders(userDTO.getId(), true);
+                        
+            request.setAttribute("orders", orders);            
             
-            request.setAttribute("unshippedOrders", unshippedOrders);            
-            request.setAttribute("shippedOrders", shippedOrders);
         }
         else // Customer must see a list of his/her orders.
         {
-            
+            ArrayList<OrderDTO> orders = OrderDAO.getOrders(userDTO.getId(), false); // not an employee.
+            request.setAttribute("orders", orders);
         }
-            
-        
-        
         
         return userDTO.isEmployee() ? Pages.EMPLOYEE : Pages.CUSTOMER;
     }

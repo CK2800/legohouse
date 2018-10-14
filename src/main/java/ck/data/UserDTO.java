@@ -47,7 +47,7 @@ public class UserDTO
         this.email = email;
         this.employee = employee;
     }
-    
+            
     /**
      * Maps a user from a database ResultSet tuple into a UserDTO object.
      * @param rs ResultSet of tuples.

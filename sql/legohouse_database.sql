@@ -19,6 +19,9 @@ CREATE TABLE users(
 CREATE TABLE orders(
 	id int PRIMARY KEY AUTO_INCREMENT,
     userId int NOT NULL,
+    length int NOT NULL,
+    width int NOT NULL,
+    height int NOT NULL,
     orderDate datetime NOT NULL DEFAULT NOW(), -- order date defaults to now().
     shippedDate datetime, -- order shipment date
     CONSTRAINT fk_orders_users

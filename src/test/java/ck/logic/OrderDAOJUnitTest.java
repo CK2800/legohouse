@@ -5,6 +5,7 @@
  */
 package ck.logic;
 
+import ck.data.BrickPattern;
 import ck.data.DbConnection;
 import ck.data.LineItemDTO;
 import ck.data.OrderDTO;
@@ -130,7 +131,7 @@ public class OrderDAOJUnitTest
         lineitems.add(new LineItemDTO(2,3));
         lineitems.add(new LineItemDTO(3,4));
         
-        OrderDTO newOrder = OrderDAO.createOrder(1, lineitems);
+        OrderDTO newOrder = OrderDAO.createOrder(1, 10,5,4, lineitems);
         assertNotNull(newOrder);
         
     }
@@ -159,5 +160,42 @@ public class OrderDAOJUnitTest
         ArrayList<OrderDTO> orders = OrderDAO.getOrders(1, true);        
         System.out.println("orders: " + orders.size());
         assertTrue(orders.size() > 0);
+    }
+    
+//    @Test
+//    public void testFillGap() throws LegoException
+//    {
+//        int length = 13;
+//        BrickCalculator.initialize();
+//        BrickCalculator.fillGap(length);
+//        int dotsCalculated = 0;
+//        for(LineItemDTO lineitem:BrickCalculator.getLineItems())
+//        {
+//            dotsCalculated += lineitem.getBrick().getLength() * lineitem.getQty();
+//        }
+//        
+//        System.out.println("Dots calculated: " + dotsCalculated);
+//        
+//        
+//    }
+    
+    @Test
+    public void testCalculate() throws LegoException
+    {
+        int length = 13;
+        int width = 9;
+        int height = 4;
+        int dotsNeeded = ((length-2) + (width-2))*2 * height;
+        System.out.println("Dots needed: " + dotsNeeded);
+        ArrayList<LineItemDTO> lineitems = BrickCalculator.calculate(BrickPattern.KVARTSTENSFORBANDT_B, length, width, height);
+        int dotsCalculated = 0;
+        for(LineItemDTO lineitem:lineitems)
+        {
+            dotsCalculated += lineitem.getBrick().getLength() * lineitem.getQty();
+        }
+        
+        System.out.println("Dots calculated: " + dotsCalculated);
+        
+        assertEquals(dotsNeeded,dotsCalculated);
     }
 }

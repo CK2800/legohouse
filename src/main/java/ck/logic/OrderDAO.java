@@ -44,7 +44,7 @@ public class OrderDAO
     private static final String GET_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, u.username, u.email, u.employee " +
                                                        "FROM orders o INNER JOIN users u ON o.userId = u.id $WHERE $ORDERBY;";
     
-    private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(userId) VALUES (?);"; 
+    private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(userId, length, width, height) VALUES (?,?,?,?);"; 
     private static final String CREATE_LINEITEM_SQL = "INSERT INTO lineitems(orderId, brickId, qty) VALUES (?, ?, ?);";
     private static final String SHIP_ORDER_SQL      = "UPDATE orders SET shippedDate = now() WHERE shippedDate is NULL AND id = ?;";
     //private static final String GET_USER_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate FROM orders o WHERE userId = ?;";
@@ -177,10 +177,13 @@ public class OrderDAO
     /**
      * Creates an order with the provided collection of line items.
      * @param lineItems ArrayList of LineItemDTO objects.
+     * @param length Length of building.
+     * @param width Width of building.
+     * @param height Height of building.
      * @return OrderDTO object representing the order created.
      * @throws LegoException 
      */
-    public static OrderDTO createOrder(int customerId, ArrayList<LineItemDTO> lineItems) throws LegoException
+    public static OrderDTO createOrder(int customerId, int length, int width, int height, ArrayList<LineItemDTO> lineItems) throws LegoException
     {
         OrderDTO order = null;
         try
@@ -191,6 +194,10 @@ public class OrderDAO
             PreparedStatement pstm = connection.prepareStatement( CREATE_ORDER_SQL, Statement.RETURN_GENERATED_KEYS );
             // Replace question mark with real value.
             pstm.setInt(1, customerId);
+            pstm.setInt(2, length);
+            pstm.setInt(3, width);
+            pstm.setInt(4, height);
+            
             // Execute the sql.
             pstm.executeUpdate();
             // Get the resultset with the key of newly created order.

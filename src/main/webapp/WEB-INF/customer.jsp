@@ -3,6 +3,7 @@
     Created on : 12-10-2018, 11:46:06
     Author     : Claus
 --%>
+<%@page import="ck.presentation.command.Command"%>
 <%@page import="ck.data.UserDTO"%>
 <%@page import="ck.presentation.Utils"%>
 <%@page import="java.util.ArrayList"%>
@@ -26,7 +27,14 @@
         <div class="container">
             <jsp:include page="Topmenu/content.jsp" />
             <h1>Hello <%= username%>!</h1>
-            <%= Utils.logOutForm() %>
+            <h2>Create new order</h2>
+            <form action="FrontController" method="post">
+                <input type="hidden" name="command" value="<%= Command.CREATE_ORDER %>">
+                <input type="text" name="length" placeholder="Length of building">
+                <input type="text" name="width" placeholder="Width of building">
+                <input type="text" name="height" placeholder="Height of building">
+                <input type="submit" value="Place order">
+            </form>
             <%= ordersTable %>
         </div>
     </body>

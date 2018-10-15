@@ -28,8 +28,7 @@
     <body>
         <div id="container">
             <jsp:include page="Topmenu/content.jsp" />
-            <h1>Hello <%= username %>!</h1>
-            <%= Utils.logOutForm() %>
+            <h1>Hello <%= username %>!</h1>            
             <%= ordersTable %>        
             <div class="error">
                 <%= errorText == null ? "" : "Error: " + errorText %>

@@ -24,6 +24,8 @@ public class LineItemDTO
     public int getBrickId(){return brickId;}
     public BrickDTO getBrick(){return brickDTO;}
     public int getQty(){return qty;}
+    // setters
+    public void setQty(int value){qty=value;}
     
     /**
      * Constructor with all attributes initialized.

@@ -12,7 +12,7 @@ import java.sql.SQLException;
  *
  * @author Claus
  */
-public class BrickDTO
+public class BrickDTO implements Comparable<BrickDTO>
 {
     private int id;
     private int width;
@@ -56,5 +56,15 @@ public class BrickDTO
     public String toString()
     {
         return width + " x " + length;
+    }
+
+    @Override
+    public int compareTo(BrickDTO o)
+    {
+        if (this.length == o.length)
+            return 0;
+        else if (this.length > o.length)
+            return 1;
+        return -1;
     }
 }

@@ -7,6 +7,7 @@ package ck.presentation.command;
 
 import ck.data.LineItemDTO;
 import ck.data.UserDTO;
+import ck.logic.BrickCalculator;
 import ck.logic.LegoException;
 import ck.logic.OrderDAO;
 import ck.presentation.Pages;
@@ -28,9 +29,18 @@ public class CreateOrderCommand extends Command
         HttpSession session = request.getSession();
         // get customer and line items.
         int customerId = ((UserDTO)session.getAttribute("userDTO")).getId();
-        ArrayList<LineItemDTO> lineItems = (ArrayList<LineItemDTO>)session.getAttribute("lineItems");
+        // get length, width and height.
+        int length = Integer.valueOf(request.getParameter("length"));
+        int width  = Integer.valueOf(request.getParameter("width"));
+        int height = Integer.valueOf(request.getParameter("height"));
+        
+        String brickPattern = request.getParameter("brickPattern");
+        
+        ArrayList<LineItemDTO> lineItems = BrickCalculator.calculate(brickPattern, length, width, height);
+        
+        //ArrayList<LineItemDTO> lineItems = (ArrayList<LineItemDTO>)session.getAttribute("lineItems");
         // create order.
-        OrderDAO.createOrder(customerId, lineItems);
+        OrderDAO.createOrder(customerId, length, width, height, lineItems);
         // Show page of order details.
         return Pages.ORDER;        
     }    

@@ -32,7 +32,7 @@ public class CalculateOrderCommand extends Command
         ArrayList<LineItemDTO>[] layers = LogicFacade.calculate(brickPattern, length, width, height);        
         request.getSession().setAttribute("layers", layers);
         
-        // Customer be able to calculate a new order.
+        // Customer should be able to select from patterns.
         ArrayList<String> brickPatterns = BrickPattern.getPatterns();
         request.setAttribute("brickPatterns", brickPatterns);
         

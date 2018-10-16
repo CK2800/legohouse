@@ -17,15 +17,31 @@ import java.util.ArrayList;
  */
 public class Utils
 {
+    public static String createOrderForm(int length, int width, int height)
+    {
+        String result = "";
+        if (length > 0 && width > 0 && height > 0)
+        {
+            result = "<form action=\"FrontController\" method=\"post\">"
+                   + "<input type=\"hidden\" name=\"command\" value=\"" + Command.CREATE_ORDER + "\" />"                      
+                   + "<input type=\"hidden\" name=\"length\" value=\"" + length + "\" />"
+                   + "<input type=\"hidden\" name=\"width\" value=\"" + width + "\" />"
+                   + "<input type=\"hidden\" name=\"height\" value=\"" + height + "\" />"
+                   + "<input type=\"submit\" value=\"Place order\" /></form>";
+        }        
+        
+        return result;
+    }
+    
     /**
      * Converts an array of arraylists of LineItemDTO objects to a HTML table.
      * PRE: Each arraylist must have equal number of elements.
      * @param layers
      * @return 
      */
-    public static String brickLayersToHtml(ArrayList<LineItemDTO>[] layers)
+    public static String brickLayersToHtml(ArrayList<LineItemDTO>[] layers) 
     {
-        String result = "<table><thead><tr>$th</tr></thead><tbody>$trs</tbody></table>";
+        String result = "<table class=\"table\"><thead><tr>$th</tr></thead><tbody>$trs</tbody></table>";
 
         String trs = "", tds = "", th = "";
         
@@ -90,7 +106,7 @@ public class Utils
     public static String ordersToHtmlTable(ArrayList<OrderDTO> orders, boolean createShipForm)
     {
         
-        String result = "<table><thead><tr><th>$1</th><th>$2</th><th>$3</th><th>$4</th><th>$5</th><th></th><th></th></tr></thead><tbody>";
+        String result = "<table class=\"table\"><thead><tr><th>$1</th><th>$2</th><th>$3</th><th>$4</th><th>$5</th><th></th><th></th></tr></thead><tbody>";
         result = result.replace("$1", "Id");
         result = result.replace("$2", "Order date");
         result = result.replace("$3", "Shipped date");
@@ -106,8 +122,8 @@ public class Utils
             result = result.replace("$5", order.getUserDTO().getEmail());            
             //result = result.replace("$6", (createShipForm && order.getShippedDate() == null)? createShipOrderForm(order.getId()) : ""); // unshipped orders gets a button.
             result = result.replace("$6", (createShipForm && order.getShippedDate() == null)? 
-                    createOrderForm(order.getId(), Pages.EMPLOYEE, Command.SHIP_ORDER, "Ship order") : ""); // unshipped orders gets a button.
-            result = result.replace("$7", createOrderForm(order.getId(), Pages.EMPLOYEE, Command.SHOW_ORDER, "Show order"));
+                createOrderForm(order.getId(), Pages.EMPLOYEE, Command.SHIP_ORDER, "Ship order") : ""); // unshipped orders gets a button.
+            result = result.replace("$7", createOrderForm(order.getId(), order.getUserDTO().isEmployee() ? Pages.EMPLOYEE : Pages.CUSTOMER, Command.SHOW_ORDER, "Show order"));
         }
         result += "</tbody></table>";
         return result;
@@ -120,7 +136,7 @@ public class Utils
      */
     public static String createNavBar(UserDTO userDTO)
     {
-        String result = "<nav><ul><li>$logOut</li><li>$page</li></ul></nav>";
+        String result = "<nav class=\"navbar\"><ul><li>$logOut</li><li>$page</li></ul></nav>";
         result = result.replace("$logOut", Utils.logOutForm());
         result = result.replace("$page", Utils.toUserPageForm(userDTO.isEmployee()));
         return result;
@@ -139,10 +155,11 @@ public class Utils
        // get user info.
        
        String result = 
-               "<div><table><thead><tr>" + 
-               "<th>User id:</th><th>Username</th><th>Email</th><th>Order date</th><th>Shipped date</th>" + 
+               "<div><table class=\"table\"><thead><tr>" + 
+               "<th>User id:</th><th>Username</th><th>Email</th><th>Order date</th><th>Shipped date</th><th>Length</th><th>Width</th><th>Height</th>" + 
                "</tr></thead><tbody><tr>" + 
                "<td>$oid</td><td>$uname</td><td>$email</td><td>$oDate</td><td>$sDate</td>" + 
+               "<td>$length</td><td>$width</td><td>$height</td>" +
                "</tr></tbody></table></div>";
        
        result = result.replace("$oid", String.valueOf(orderDTO.getId()));
@@ -151,8 +168,11 @@ public class Utils
        result = result.replace("$oDate", orderDTO.getOrderDate().toString());
        // replace with shippedDate - check for null.
        result = result.replace("$sDate", orderDTO.getShippedDate() != null ? orderDTO.getShippedDate().toString() : "");
+       result = result.replace("$length", String.valueOf(orderDTO.getLength()));
+       result = result.replace("$width", String.valueOf(orderDTO.getWidth()));
+       result = result.replace("$height", String.valueOf(orderDTO.getHeight()));
        
-       result += "<div><table><thead><tr><th>Brick id</th><th>Qty</th><th>Brick</th></thead><tbody>";
+       result += "<div><table class=\"table\"><thead><tr><th>Brick id</th><th>Qty</th><th>Brick</th></thead><tbody>";
        for(LineItemDTO lineitem : orderDTO.getLineItems())
        {
            String liResult = "<tr><td>$1</td><td>$2</td><td>$3</td></tr>";

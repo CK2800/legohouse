@@ -24,11 +24,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Employee page</title>
+        <jsp:include page="../bootstrap/bootstrapcdn.jsp"></jsp:include>
     </head>
     <body>
-        <div id="container">
-            <jsp:include page="Topmenu/content.jsp" />
-            <h1>Hello <%= username %>!</h1>            
+        <div class="container">
+            <jsp:include page="Topmenu/content.jsp" />            
             <%= ordersTable %>        
             <div class="error">
                 <%= errorText == null ? "" : "Error: " + errorText %>

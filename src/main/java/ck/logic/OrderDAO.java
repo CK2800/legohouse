@@ -27,9 +27,9 @@ public class OrderDAO
     /**
      * Get details for order including its user, lineitems and brick of each line item.
      */
-    private static final String GET_ORDER_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, " +
+    private static final String GET_ORDER_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, o.length, o.width, o.height," +
                                                 "l.orderId, l.brickId, l.qty, " +
-                                                "b.length, b.width, " +
+                                                "b.length as brickLength, b.width as brickWidth, " +
                                                 "u.username, u.email, u.employee " +
                                                 "FROM orders o INNER JOIN lineitems l " + 
                                                 "ON o.id = l.orderId " + 
@@ -41,7 +41,7 @@ public class OrderDAO
      * Generic sql for retrieving a list of orders matching an 
      * optional WHERE clause ordered by an optional ORDERBY clause.
      */
-    private static final String GET_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, u.username, u.email, u.employee " +
+    private static final String GET_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, o.length, o.width, o.height, u.username, u.email, u.employee " +
                                                        "FROM orders o INNER JOIN users u ON o.userId = u.id $WHERE $ORDERBY;";
     
     private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(userId, length, width, height) VALUES (?,?,?,?);"; 
@@ -266,7 +266,7 @@ public class OrderDAO
                     // map the lineitem.
                     LineItemDTO lineItemDTO = LineItemDTO.mapLineItem(rs);
                     // map the brick and add to line items.
-                    lineItemDTO.setBrick(BrickDTO.mapBrick(rs, "brickId", "width", "length"));
+                    lineItemDTO.setBrick(BrickDTO.mapBrick(rs, "brickId", "brickWidth", "brickLength"));
                     // add line item to collection.
                     lineItems.add(lineItemDTO);                                        
                 }  

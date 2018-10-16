@@ -9,8 +9,6 @@ import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
 import ck.logic.LogicFacade;
-import ck.logic.OrderDAO;
-import ck.logic.UserDAO;
 import ck.presentation.Pages;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +33,7 @@ public class ShipOrderCommand extends Command
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             // Check if logged in user is in fact an employee.
             if (loggedInUser.equals(userDTO) && loggedInUser.isEmployee())
-            {               
-                
+            {   
                 if (LogicFacade.shipOrder(orderId))
                 {   
                     // set orders on request.

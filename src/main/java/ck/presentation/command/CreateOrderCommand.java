@@ -5,12 +5,11 @@
  */
 package ck.presentation.command;
 
-import ck.data.LineItemDTO;
+import ck.data.BrickPattern;
+import ck.data.OrderDTO;
 import ck.data.UserDTO;
-import ck.logic.BrickCalculator;
 import ck.logic.LegoException;
 import ck.logic.LogicFacade;
-import ck.logic.OrderDAO;
 import ck.presentation.Pages;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
@@ -29,22 +28,23 @@ public class CreateOrderCommand extends Command
         // get current session.
         HttpSession session = request.getSession();
         // get customer and line items.
-        int customerId = ((UserDTO)session.getAttribute("userDTO")).getId();
-        // get length, width and height.
+        UserDTO userDTO = (UserDTO)session.getAttribute("userDTO");
         int length = Integer.valueOf(request.getParameter("length"));
-        int width  = Integer.valueOf(request.getParameter("width"));
+        int width = Integer.valueOf(request.getParameter("width"));
         int height = Integer.valueOf(request.getParameter("height"));
         
-        String brickPattern = request.getParameter("brickPattern");
+        // Create the order and remove the layers from session.
+        LogicFacade.createOrder(session, length, width, height);
+        // Get users orders.
+        ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), false); // not an employee.
+        request.setAttribute("orders", orders);
+        // Get brick patterns.
+        ArrayList<String> brickPatterns = BrickPattern.getPatterns();
+        request.setAttribute("brickPatterns", brickPatterns);
         
-        ArrayList<LineItemDTO>[] lineItems = LogicFacade.calculate(brickPattern, length, width, height);
+        return Pages.CUSTOMER;
         
-        //ArrayList<LineItemDTO> lineItems = (ArrayList<LineItemDTO>)session.getAttribute("lineItems");
-        // create order.
         
-        //OrderDAO.createOrder(customerId, length, width, height, lineItems);
         
-        // Show page of order details.
-        return Pages.ORDER;        
     }    
 }

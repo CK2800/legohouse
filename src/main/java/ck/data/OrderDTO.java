@@ -21,6 +21,9 @@ public class OrderDTO
     private int userId;
     private Date orderDate;
     private Date shippedDate;
+    private int length;
+    private int width;
+    private int height;
     private ArrayList<LineItemDTO> lineItems;
     private UserDTO userDTO;
     
@@ -29,6 +32,9 @@ public class OrderDTO
     public int getUserId(){return userId;}
     public Date getOrderDate(){return orderDate;}
     public Date getShippedDate(){return shippedDate;}
+    public int getLength(){return length;}
+    public int getWidth(){return width;}
+    public int getHeight(){return height;}
     public ArrayList<LineItemDTO> getLineItems(){return lineItems;}
     public UserDTO getUserDTO(){return userDTO;}
     
@@ -41,12 +47,15 @@ public class OrderDTO
      * @param orderDate date of order.
      * @param shippedDate date of order shipment.     
      */
-    public OrderDTO(int id, int customerId, Date orderDate, Date shippedDate)
+    public OrderDTO(int id, int customerId, Date orderDate, Date shippedDate, int length, int width, int height)
     {
         this.id = id;
         this.userId = customerId;
         this.orderDate = orderDate;
         this.shippedDate = shippedDate;
+        this.length = length;
+        this.width = width;
+        this.height = height;
         
     }
     
@@ -74,6 +83,12 @@ public class OrderDTO
      */
     public static OrderDTO mapOrder(ResultSet rs) throws SQLException
     {    
-        return new OrderDTO(rs.getInt("id"), rs.getInt("userId"), rs.getDate("orderDate"), rs.getDate("shippedDate"));    
+        return new OrderDTO(rs.getInt("id"), 
+                            rs.getInt("userId"), 
+                            rs.getDate("orderDate"), 
+                            rs.getDate("shippedDate"), 
+                            rs.getInt("length"), 
+                            rs.getInt("width"), 
+                            rs.getInt("height"));
     }
 }

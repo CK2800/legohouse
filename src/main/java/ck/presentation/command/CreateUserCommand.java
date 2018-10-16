@@ -5,11 +5,14 @@
  */
 package ck.presentation.command;
 
+import ck.data.BrickPattern;
+import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.UserDAO;
 import ck.logic.LegoException;
 import ck.logic.LogicFacade;
 import ck.presentation.Pages;
+import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,7 +30,7 @@ public class CreateUserCommand extends Command
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String password2 = request.getParameter("password2");
-        boolean employee = Boolean.parseBoolean(request.getParameter("employee"));
+        boolean employee = (request.getParameter("employee") != null);
         
         UserDTO userDTO = LogicFacade.createUser(username, email, password, password2, employee);
 
@@ -35,6 +38,25 @@ public class CreateUserCommand extends Command
         LoginCommand.invalidateSession(request);
         LoginCommand.loginUser(request, userDTO);                
 
+        // Opret ordrer osv.
+        // Employee must se a list of shipped / unshipped orders.
+        if (userDTO.isEmployee())
+        {
+            // Get list of orders. user id in parameters doesn't really matter, since we are employee.
+            ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), true);                        
+            request.setAttribute("orders", orders);            
+            
+        }
+        else // Customer must...
+        {
+            // ... see a list of his/her orders.
+            ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), false); // not an employee.
+            request.setAttribute("orders", orders);
+            // ... be able to make a new order.
+            ArrayList<String> brickPatterns = BrickPattern.getPatterns();
+            request.setAttribute("brickPatterns", brickPatterns);
+        }
+        
         return employee ? Pages.EMPLOYEE : Pages.CUSTOMER;
     }    
 }

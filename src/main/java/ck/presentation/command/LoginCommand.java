@@ -41,8 +41,7 @@ public class LoginCommand extends Command
         if (userDTO.isEmployee())
         {
             // Get list of orders. user id in parameters doesn't really matter, since we are employee.
-            ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), true);
-                        
+            ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), true);                        
             request.setAttribute("orders", orders);            
             
         }

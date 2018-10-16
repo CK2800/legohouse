@@ -20,10 +20,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <jsp:include page="../bootstrap/bootstrapcdn.jsp"></jsp:include>
     </head>
     <body>
-        <div id="container">
-            <h1>Hello World!</h1>
+        <div class="container">
+            <jsp:include page="Topmenu/content.jsp" />            
             <%= order %>
             <div class="error">
                 <%= errorText == null ? "" : "Error: " + errorText %>

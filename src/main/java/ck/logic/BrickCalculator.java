@@ -98,16 +98,13 @@ public class BrickCalculator
         {
             fillGap(Math.abs(offset-2));
             // adjust length to factor in the offset.
-            length -= (Math.abs(offset-2));
-            // if offset is 1, subtract 2 from length to accommodate offset on adjacent wall (the 1x2 brick is rotated 90 degrees).
-//            if (offset == 1)
-//                length -= 2;
+            length -= (Math.abs(offset-2));            
         }
         
         length = fillSequence(sequence, length);       
                 
         // Fill the remaining gap if any.
-        fillGap(length);
+        fillGap(length);    
     }
     
     public static ArrayList<LineItemDTO> calculate(String patternName, int length, int width, int height) throws LegoException
@@ -121,9 +118,7 @@ public class BrickCalculator
         
         // get pattern.
         int[][]pattern = BrickPattern.getPattern(patternName);        
-        // get pattern length.
-        //int patternLength = pattern[0][0];                   
-        
+                
         // stopping conditions:
         //if (patternLength > length)
         if (false)
@@ -148,9 +143,9 @@ public class BrickCalculator
     }
 
     /**
-     * Fills with the sequence of bricks.
-     * @param startIndex
-     * @param remainingLength
+     * Fills a wall with bricks in pattern according to the sequence.
+     * @param sequence Array of integers indicating sequence of brick id's.
+     * @param length The length to be filled.
      * @return 
      */
     private static int fillSequence(int[] sequence, int length)

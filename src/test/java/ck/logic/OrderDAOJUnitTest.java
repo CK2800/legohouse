@@ -192,10 +192,7 @@ public class OrderDAOJUnitTest
         for(LineItemDTO lineitem:lineitems)
         {
             dotsCalculated += lineitem.getBrick().getLength() * lineitem.getQty();
-        }
-        
-        System.out.println("Dots calculated: " + dotsCalculated);
-        
+        }        
         assertEquals(dotsNeeded,dotsCalculated);
     }
 }

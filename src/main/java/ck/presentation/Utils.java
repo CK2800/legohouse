@@ -17,6 +17,17 @@ import java.util.ArrayList;
  */
 public class Utils
 {
+    public static String brickPatternsToSelect(ArrayList<String> brickPatterns)
+    {
+        String result = "<select name=\"brickPattern\">$options</select>", options = "";
+        for(String pattern : brickPatterns)
+        {
+            options += "<option value=\"$pattern\">$pattern</option>";
+            options = options.replace("$pattern", pattern);
+        }
+        result = result.replace("$options", options);
+        return result;
+    }
     public static String logOutForm()
     {
         String result = "<form action=\"FrontController\" method=\"post\">";

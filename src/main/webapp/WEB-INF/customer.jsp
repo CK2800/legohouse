@@ -13,6 +13,10 @@
     ArrayList<OrderDTO> orders = (ArrayList<OrderDTO>)request.getAttribute("orders");
     // Convert the list to html representation.
     String ordersTable = orders != null ? Utils.ordersToHtmlTable(orders, false) : "No orders in system."; 
+    // Get the list of brick patterns.
+    ArrayList<String> brickPatterns = (ArrayList<String>)request.getAttribute("brickPatterns");
+    // Convert to <select> html element.
+    String brickPatternsSelect = brickPatterns != null ? Utils.brickPatternsToSelect(brickPatterns):"No brick patterns available.";
     // Get username.    
     String username = ((UserDTO)request.getSession().getAttribute("userDTO")).getUsername();
 %>
@@ -33,6 +37,7 @@
                 <input type="text" name="length" placeholder="Length of building">
                 <input type="text" name="width" placeholder="Width of building">
                 <input type="text" name="height" placeholder="Height of building">
+                <%= brickPatternsSelect %>
                 <input type="submit" value="Place order">
             </form>
             <%= ordersTable %>

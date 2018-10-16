@@ -5,7 +5,9 @@
  */
 package ck.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Matrices with various brick patterns.
@@ -65,5 +67,22 @@ public class BrickPattern
         
         // Get pattern with name or LOEBERFORBANDT_1_ARR
         return patterns.getOrDefault(name, LOEBERFORBANDT_1_ARR); 
+    }
+    
+    /**
+     * Gets a set of strings of possible pattern names.
+     * @return 
+     */
+    public static ArrayList<String> getPatterns()
+    {
+        if (patterns == null)
+            initializePatterns();
+        
+        ArrayList<String> result = new ArrayList<>();
+        Set<String> sPatterns =  patterns.keySet();
+        for(String s:sPatterns)
+            result.add(s);
+        
+        return result;
     }
 }

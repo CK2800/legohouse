@@ -5,6 +5,7 @@
  */
 package ck.presentation.command;
 
+import ck.data.BrickPattern;
 import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
@@ -39,10 +40,14 @@ public class UserPageCommand extends Command
                 request.setAttribute("orders", orders);            
 
             }
-            else // Customer must see a list of his/her orders.
+            else // Customer must...
             {
+                // ... see a list of his/her orders.
                 ArrayList<OrderDTO> orders = OrderDAO.getOrders(userDTO.getId(), false); // not an employee.
                 request.setAttribute("orders", orders);
+                // ... be able to make a new order.
+                ArrayList<String> brickPatterns = BrickPattern.getPatterns();
+                request.setAttribute("brickPatterns", brickPatterns);
             }
         
             return userDTO.isEmployee() ? Pages.EMPLOYEE : Pages.CUSTOMER;

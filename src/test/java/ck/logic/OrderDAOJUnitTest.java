@@ -9,7 +9,6 @@ import ck.data.BrickPattern;
 import ck.data.DbConnection;
 import ck.data.LineItemDTO;
 import ck.data.OrderDTO;
-import ck.presentation.viewmodels.OrderUserComposite;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -169,7 +168,7 @@ public class OrderDAOJUnitTest
 //        BrickCalculator.initialize();
 //        BrickCalculator.fillGap(length);
 //        int dotsCalculated = 0;
-//        for(LineItemDTO lineitem:BrickCalculator.getLineItems())
+//        for(LineItemDTO lineitem:BrickCalculator.getLayers())
 //        {
 //            dotsCalculated += lineitem.getBrick().getLength() * lineitem.getQty();
 //        }
@@ -184,15 +183,16 @@ public class OrderDAOJUnitTest
     {
         int length = 13;
         int width = 9;
-        int height = 4;
+        int height = 14;
         int dotsNeeded = ((length-2) + (width-2))*2 * height;
         System.out.println("Dots needed: " + dotsNeeded);
-        ArrayList<LineItemDTO> lineitems = BrickCalculator.calculate(BrickPattern.KVARTSTENSFORBANDT_B, length, width, height);
+        ArrayList<LineItemDTO>[] layers = BrickCalculator.calculate(BrickPattern.KVARTSTENSFORBANDT_B, length, width, height);
+        //ArrayList<LineItemDTO> lineitems = BrickCalculator.calculate(BrickPattern.KVARTSTENSFORBANDT_B, length, width, height);
         int dotsCalculated = 0;
-        for(LineItemDTO lineitem:lineitems)
-        {
-            dotsCalculated += lineitem.getBrick().getLength() * lineitem.getQty();
-        }        
+        for(ArrayList<LineItemDTO> al:layers)
+            for(LineItemDTO lineitem:al)
+                dotsCalculated += lineitem.getBrick().getLength() * lineitem.getQty();
+                
         assertEquals(dotsNeeded,dotsCalculated);
     }
 }

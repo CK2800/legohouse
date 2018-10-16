@@ -17,10 +17,10 @@ import java.util.Collections;
  */
 public class BrickCalculator
 {
+    private static ArrayList<LineItemDTO>[] layers;    
+    private static ArrayList<BrickDTO> bricks;    
     private static ArrayList<LineItemDTO> lineItems;
-    private static ArrayList<BrickDTO> bricks;
-    
-    public static ArrayList<LineItemDTO> getLineItems(){return lineItems;}
+    public static ArrayList<LineItemDTO>[] getLayers(){return layers;}
     
     
     
@@ -69,23 +69,16 @@ public class BrickCalculator
         }
     }
     
-    public static void initialize() throws LegoException
+    public static void initialize(int height) throws LegoException
     {
-        // Initialize lineItems.
-        lineItems = new ArrayList<>();        
+        
+        // Create array of arraylists of lineitemDTOs, one for each layer.
+        layers = new ArrayList[height];        
         // get bricks from system.
         bricks = BrickDAO.getBricks();
         // Sort list on brick length descending.
         Collections.sort(bricks);        
         Collections.reverse(bricks);
-        
-        // Add a line item for each brick, with qty = 0.
-        for(BrickDTO brick:bricks)
-        {
-            LineItemDTO lineitem = new LineItemDTO(brick.getId(), 0);
-            lineitem.setBrick(brick);
-            lineItems.add(lineitem);
-        }   
     }
     
     private static void calculateSide(int[] sequence, int length)
@@ -107,10 +100,10 @@ public class BrickCalculator
         fillGap(length);    
     }
     
-    public static ArrayList<LineItemDTO> calculate(String patternName, int length, int width, int height) throws LegoException
+    public static ArrayList<LineItemDTO>[] calculate(String patternName, int length, int width, int height) throws LegoException
     {   
         // Set up needed variables.
-        initialize();
+        initialize(height);
         
         // subtract 2 from length and width since their values include brick width of adjacent wall.
         length -= 2;
@@ -129,7 +122,9 @@ public class BrickCalculator
         {    
             for (int layer = 0; layer < height; layer++)
             {
-                // find sequence for this layer, remember we may have more layerns than sequences in pattern.
+                initializeLayer();
+                
+                // find sequence for this layer, remember we may have more layers than sequences in pattern.
                 int[] sequence = pattern[layer % pattern.length];
                 
                 // Divide and CONQUER.... YAAARGH !
@@ -137,9 +132,11 @@ public class BrickCalculator
                 calculateSide(sequence, width);
                 calculateSide(sequence, length);
                 calculateSide(sequence, width);                
+                
+                layers[layer] = lineItems;
             }
         }
-        return lineItems;
+        return layers;
     }
 
     /**
@@ -180,5 +177,21 @@ public class BrickCalculator
                 break;
         }
         return length;
+    }
+
+    /**
+     * Initializes layer specific variables.
+     */
+    private static void initializeLayer()
+    {
+        // initialize a new arraylist of LineItemDTOs                
+        lineItems = new ArrayList<>(); 
+        // Add a line item for each brick, with qty = 0.
+        for(BrickDTO brick:bricks)
+        {
+            LineItemDTO lineitem = new LineItemDTO(brick.getId(), 0);
+            lineitem.setBrick(brick);
+            lineItems.add(lineitem);
+        }   
     }
 }

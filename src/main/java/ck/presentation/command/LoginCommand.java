@@ -9,8 +9,7 @@ import ck.data.BrickPattern;
 import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
-import ck.logic.OrderDAO;
-import ck.logic.UserDAO;
+import ck.logic.LogicFacade;
 import ck.presentation.Pages;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,7 @@ public class LoginCommand extends Command
         String password = request.getParameter("password");
         
         // Validate user.
-        UserDTO userDTO = UserDAO.validateUser(email, password);
+        UserDTO userDTO = LogicFacade.validateUser(email, password);
         // log in user.
         loginUser(request, userDTO);
         
@@ -42,7 +41,7 @@ public class LoginCommand extends Command
         if (userDTO.isEmployee())
         {
             // Get list of orders. user id in parameters doesn't really matter, since we are employee.
-            ArrayList<OrderDTO> orders = OrderDAO.getOrders(userDTO.getId(), true);
+            ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), true);
                         
             request.setAttribute("orders", orders);            
             
@@ -50,7 +49,7 @@ public class LoginCommand extends Command
         else // Customer must...
         {
             // ... see a list of his/her orders.
-            ArrayList<OrderDTO> orders = OrderDAO.getOrders(userDTO.getId(), false); // not an employee.
+            ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), false); // not an employee.
             request.setAttribute("orders", orders);
             // ... be able to make a new order.
             ArrayList<String> brickPatterns = BrickPattern.getPatterns();

@@ -8,6 +8,7 @@ package ck.presentation.command;
 import ck.data.UserDTO;
 import ck.logic.UserDAO;
 import ck.logic.LegoException;
+import ck.logic.LogicFacade;
 import ck.presentation.Pages;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +29,7 @@ public class CreateUserCommand extends Command
         String password2 = request.getParameter("password2");
         boolean employee = Boolean.parseBoolean(request.getParameter("employee"));
         
-        UserDTO userDTO = UserDAO.createUser(username, email, password, password2, employee);
+        UserDTO userDTO = LogicFacade.createUser(username, email, password, password2, employee);
 
         // Log in the new customer.
         LoginCommand.invalidateSession(request);

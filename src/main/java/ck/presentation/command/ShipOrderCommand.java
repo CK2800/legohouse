@@ -8,6 +8,7 @@ package ck.presentation.command;
 import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
+import ck.logic.LogicFacade;
 import ck.logic.OrderDAO;
 import ck.logic.UserDAO;
 import ck.presentation.Pages;
@@ -29,17 +30,17 @@ public class ShipOrderCommand extends Command
         // Get user from database to validate equality. 
         if (loggedInUser != null)
         {
-            UserDTO userDTO = UserDAO.validateUser(loggedInUser.getEmail(), loggedInUser.getPassword());        
+            UserDTO userDTO = LogicFacade.validateUser(loggedInUser.getEmail(), loggedInUser.getPassword());        
             // Get order id from request.
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             // Check if logged in user is in fact an employee.
             if (loggedInUser.equals(userDTO) && loggedInUser.isEmployee())
             {               
                 
-                if (OrderDAO.shipOrder(orderId))
+                if (LogicFacade.shipOrder(orderId))
                 {   
                     // set orders on request.
-                    ArrayList<OrderDTO> orders = OrderDAO.getOrders(userDTO.getId(), true);
+                    ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), true);
                     request.setAttribute("orders", orders);  
                     // return to employee page
                     return Pages.EMPLOYEE;

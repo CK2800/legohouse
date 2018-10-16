@@ -9,6 +9,7 @@ import ck.data.LineItemDTO;
 import ck.data.UserDTO;
 import ck.logic.BrickCalculator;
 import ck.logic.LegoException;
+import ck.logic.LogicFacade;
 import ck.logic.OrderDAO;
 import ck.presentation.Pages;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class CreateOrderCommand extends Command
         
         String brickPattern = request.getParameter("brickPattern");
         
-        ArrayList<LineItemDTO>[] lineItems = BrickCalculator.calculate(brickPattern, length, width, height);
+        ArrayList<LineItemDTO>[] lineItems = LogicFacade.calculate(brickPattern, length, width, height);
         
         //ArrayList<LineItemDTO> lineItems = (ArrayList<LineItemDTO>)session.getAttribute("lineItems");
         // create order.

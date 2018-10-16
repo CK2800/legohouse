@@ -9,6 +9,7 @@ import ck.data.BrickPattern;
 import ck.data.LineItemDTO;
 import ck.logic.BrickCalculator;
 import ck.logic.LegoException;
+import ck.logic.LogicFacade;
 import ck.presentation.Pages;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class CalculateOrderCommand extends Command
         int width = Integer.valueOf(request.getParameter("width"));
         int height = Integer.valueOf(request.getParameter("height"));
         // Calculate and set result on session and return to customers page.
-        ArrayList<LineItemDTO>[] layers = BrickCalculator.calculate(brickPattern, length, width, height);        
+        ArrayList<LineItemDTO>[] layers = LogicFacade.calculate(brickPattern, length, width, height);        
         request.getSession().setAttribute("layers", layers);
         
         // Customer be able to calculate a new order.

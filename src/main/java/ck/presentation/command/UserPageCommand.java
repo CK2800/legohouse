@@ -9,8 +9,8 @@ import ck.data.BrickPattern;
 import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
+import ck.logic.LogicFacade;
 import ck.logic.OrderDAO;
-import ck.logic.UserDAO;
 import ck.presentation.Pages;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
@@ -29,13 +29,13 @@ public class UserPageCommand extends Command
         // get the logged in user.
         UserDTO userDTO = (UserDTO)request.getSession().getAttribute("userDTO");
         // Revalidate user just in case.
-        if (userDTO != null && UserDAO.validateUser(userDTO.getEmail(), userDTO.getPassword()) != null)
+        if (userDTO != null && LogicFacade.validateUser(userDTO.getEmail(), userDTO.getPassword()) != null)
         {
             // Employee must se a list of shipped / unshipped orders.
             if (userDTO.isEmployee())
             {
                 // Get list of orders. user id in parameters doesn't really matter, since we are employee.
-                ArrayList<OrderDTO> orders = OrderDAO.getOrders(userDTO.getId(), true);
+                ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), true);
 
                 request.setAttribute("orders", orders);            
 
@@ -43,7 +43,7 @@ public class UserPageCommand extends Command
             else // Customer must...
             {
                 // ... see a list of his/her orders.
-                ArrayList<OrderDTO> orders = OrderDAO.getOrders(userDTO.getId(), false); // not an employee.
+                ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), false); // not an employee.
                 request.setAttribute("orders", orders);
                 // ... be able to make a new order.
                 ArrayList<String> brickPatterns = BrickPattern.getPatterns();

@@ -8,8 +8,7 @@ package ck.presentation.command;
 import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
-import ck.logic.OrderDAO;
-import ck.presentation.FrontController;
+import ck.logic.LogicFacade;
 import ck.presentation.Pages;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +24,7 @@ public class ShowOrderCommand extends Command
     {
         
         UserDTO userDTO = (UserDTO)request.getSession().getAttribute("userDTO");
-        OrderDTO orderDTO = OrderDAO.getOrder(Integer.valueOf(request.getParameter("orderId")));
+        OrderDTO orderDTO = LogicFacade.getOrder(Integer.valueOf(request.getParameter("orderId")));
         // stopping conditions.
         if (userDTO == null) // no user found.
         {

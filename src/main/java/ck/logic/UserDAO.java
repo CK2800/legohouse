@@ -32,7 +32,7 @@ public class UserDAO
      * @return A UserDTO object representing the created user.
      * @throws LegoException 
      */
-    public static UserDTO createUser(String username, String email, String password, String password2, boolean employee) throws LegoException
+    protected static UserDTO createUser(String username, String email, String password, String password2, boolean employee) throws LegoException
     {    
         // trim whitespace.
         username = username.trim();
@@ -80,7 +80,7 @@ public class UserDAO
      * @return The validated user as a UserDTO.
      * @throws LegoException If the user is not validated or an error occurs.
      */
-    public static UserDTO validateUser(String email, String password) throws LegoException
+    protected static UserDTO validateUser(String email, String password) throws LegoException
     {   
         // Trim input
         email = email.trim();        

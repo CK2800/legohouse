@@ -178,15 +178,29 @@ public class OrderDAOJUnitTest
 //        
 //    }
     
+//      @Test
+//      public void testFillSequence() throws LegoException
+//      {
+//          int height = 1;
+//          int length = 10;
+//          BrickCalculator.initialize(height);
+//          for(int i = 0; i < height; i++)
+//          {
+//              BrickCalculator.initializeLayer();
+//              BrickCalculator.calculateSide(new int[]{1,3}, length);
+//          }
+//          assertTrue(height>2);
+//
+//      }
     @Test
     public void testCalculate() throws LegoException
     {
         int length = 13;
         int width = 9;
-        int height = 14;
+        int height = 2;
         int dotsNeeded = ((length-2) + (width-2))*2 * height;
         System.out.println("Dots needed: " + dotsNeeded);
-        ArrayList<LineItemDTO>[] layers = BrickCalculator.calculate(BrickPattern.KVARTSTENSFORBANDT_B, length, width, height);
+        ArrayList<LineItemDTO>[] layers = BrickCalculator.calculate(BrickPattern.BLOKFORBANDT, length, width, height);
         //ArrayList<LineItemDTO> lineitems = BrickCalculator.calculate(BrickPattern.KVARTSTENSFORBANDT_B, length, width, height);
         int dotsCalculated = 0;
         for(ArrayList<LineItemDTO> al:layers)

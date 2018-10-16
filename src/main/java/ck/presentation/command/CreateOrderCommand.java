@@ -36,11 +36,13 @@ public class CreateOrderCommand extends Command
         
         String brickPattern = request.getParameter("brickPattern");
         
-        ArrayList<LineItemDTO> lineItems = BrickCalculator.calculate(brickPattern, length, width, height);
+        ArrayList<LineItemDTO>[] lineItems = BrickCalculator.calculate(brickPattern, length, width, height);
         
         //ArrayList<LineItemDTO> lineItems = (ArrayList<LineItemDTO>)session.getAttribute("lineItems");
         // create order.
-        OrderDAO.createOrder(customerId, length, width, height, lineItems);
+        
+        //OrderDAO.createOrder(customerId, length, width, height, lineItems);
+        
         // Show page of order details.
         return Pages.ORDER;        
     }    

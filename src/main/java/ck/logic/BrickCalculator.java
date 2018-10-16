@@ -17,10 +17,12 @@ import java.util.Collections;
  */
 public class BrickCalculator
 {
+    // private members.
     private static ArrayList<LineItemDTO>[] layers;    
     private static ArrayList<BrickDTO> bricks;    
     private static ArrayList<LineItemDTO> lineItems;
-    public static ArrayList<LineItemDTO>[] getLayers(){return layers;}
+    // public getters.
+    protected static ArrayList<LineItemDTO>[] getLayers(){return layers;}
     
     
     
@@ -31,9 +33,8 @@ public class BrickCalculator
      * @param length The length that needs filling.
      * 
      */
-    public static void fillGap(int length)
-    {     
-        System.out.println("filling " + length);
+    private static void fillGap(int length)
+    {  
         // As long as a gap exists...
         if(length > 0)
         {
@@ -53,8 +54,7 @@ public class BrickCalculator
         {
             // Call recursively untill length has been filled.
             fillGap(length); 
-        }
-        
+        }        
     }
     
     /**
@@ -69,7 +69,7 @@ public class BrickCalculator
         }
     }
     
-    public static void initialize(int height) throws LegoException
+    private static void initialize(int height) throws LegoException
     {
         
         // Create array of arraylists of lineitemDTOs, one for each layer.
@@ -100,7 +100,17 @@ public class BrickCalculator
         fillGap(length);    
     }
     
-    public static ArrayList<LineItemDTO>[] calculate(String patternName, int length, int width, int height) throws LegoException
+    /**
+     * Calculates the bricks needed for a construction of width x length x height and the selected brick pattern.
+     * 
+     * @param patternName
+     * @param length
+     * @param width
+     * @param height
+     * @return
+     * @throws LegoException 
+     */
+    protected static ArrayList<LineItemDTO>[] calculate(String patternName, int length, int width, int height) throws LegoException
     {   
         // Set up needed variables.
         initialize(height);

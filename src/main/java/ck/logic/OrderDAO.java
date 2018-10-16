@@ -59,7 +59,7 @@ public class OrderDAO
      * @return ArrayList of OrderDTO objects.
      * @throws LegoException 
      */
-    public static ArrayList<OrderDTO> getOrders(int userId, boolean employee) throws LegoException
+    protected static ArrayList<OrderDTO> getOrders(int userId, boolean employee) throws LegoException
     {
         ArrayList<OrderDTO> orders = new ArrayList<>();
         try
@@ -142,7 +142,7 @@ public class OrderDAO
      * @return true if exactly one UNSHIPPED order is shipped, false otherwise (multiple orders are not shipped).
      * @throws LegoException 
      */
-    public static boolean shipOrder(int orderId) throws LegoException
+    protected static boolean shipOrder(int orderId) throws LegoException
     {
         int recordsAffected = 0;
         boolean autocommit = false;
@@ -183,7 +183,7 @@ public class OrderDAO
      * @return OrderDTO object representing the order created.
      * @throws LegoException 
      */
-    public static OrderDTO createOrder(int customerId, int length, int width, int height, ArrayList<LineItemDTO> lineItems) throws LegoException
+    protected static OrderDTO createOrder(int customerId, int length, int width, int height, ArrayList<LineItemDTO> lineItems) throws LegoException
     {
         OrderDTO order = null;
         try
@@ -234,7 +234,7 @@ public class OrderDAO
      * @param orderId The orders id.
      * @return OrderDTO
      */
-    public static OrderDTO getOrder(int orderId) throws LegoException
+    protected static OrderDTO getOrder(int orderId) throws LegoException
     {        
         OrderDTO order = null;  
         UserDTO user = null;

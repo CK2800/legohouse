@@ -17,6 +17,50 @@ import java.util.ArrayList;
  */
 public class Utils
 {
+    /**
+     * Converts an array of arraylists of LineItemDTO objects to a HTML table.
+     * PRE: Each arraylist must have equal number of elements.
+     * @param layers
+     * @return 
+     */
+    public static String brickLayersToHtml(ArrayList<LineItemDTO>[] layers)
+    {
+        String result = "<table><thead><tr>$th</tr></thead><tbody>$trs</tbody></table>";
+
+        String trs = "", tds = "", th = "";
+        
+        for(int i = 0; i < layers.length; i++)
+        {
+            ArrayList<LineItemDTO> aList = layers[i];
+            
+            String tr = "<tr>$td</tr>";
+            String td = "<td>" + (i+1) + "</td>";
+            if (i == 0)
+                th += "<th>Layer</th>";
+            for(LineItemDTO item:aList)
+            {
+                td += "<td>$qty</td>";
+                td = td.replace("$qty", String.valueOf(item.getQty()));   
+                
+                if (i == 0) // first arraylist of array.
+                {                    
+                    th += "<th>$brick</th>";
+                    th = th.replace("$brick", item.getBrick().toString());                    
+                }
+            }
+            tr = tr.replace("$td", td);
+            trs += tr;
+        }
+        result = result.replace("$th", th);
+        result = result.replace("$trs", trs);
+        return result;
+    }
+    
+    /**
+     * Converts an arraylist of strings to a html select element named 'brickPattern'.
+     * @param brickPatterns
+     * @return 
+     */
     public static String brickPatternsToSelect(ArrayList<String> brickPatterns)
     {
         String result = "<select name=\"brickPattern\">$options</select>", options = "";

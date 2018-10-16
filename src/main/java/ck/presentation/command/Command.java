@@ -25,6 +25,7 @@ public abstract class Command
     public static final String CREATE_USER = "createUser";
     public static final String SHOW_ORDER = "showOrder";
     public static final String USER_PAGE = "userPage";
+    public static final String CALCULATE_ORDER = "calculateOrder";
     
     public static String command;
     // HashMap of available commands.
@@ -42,7 +43,8 @@ public abstract class Command
         commands.put( CREATE_USER, new CreateUserCommand() );
         commands.put( LOGOUT, new LogoutCommand() );
         commands.put( SHOW_ORDER, new ShowOrderCommand() );
-        commands.put( USER_PAGE, new UserPageCommand() );        
+        commands.put( USER_PAGE, new UserPageCommand() );  
+        commands.put( CALCULATE_ORDER, new CalculateOrderCommand() );
     }
     
     /**

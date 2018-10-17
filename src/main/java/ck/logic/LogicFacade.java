@@ -57,11 +57,6 @@ public class LogicFacade
     /**
      * ------------- OrderDAO methods -------------
      */
-           
-//    public static OrderDTO createOrder(int customerId, int length, int width, int height, ArrayList<LineItemDTO> lineItems) throws LegoException
-//    {
-//        return OrderDAO.createOrder(customerId, length, width, height, lineItems);
-//    }
     
     public static OrderDTO getOrder(int orderId) throws LegoException
     {
@@ -93,6 +88,10 @@ public class LogicFacade
     }
     
     /**
+     * ------------- LogicFacade (this) methods ------------- 
+     */
+    
+    /**
      * Creates an order based on session attribute "layers". 
      * If the order is successfully created, the session attribute is removed.
      * @param session
@@ -108,9 +107,11 @@ public class LogicFacade
         boolean orderCreated = false;
         
         // Get user from session.
-        UserDTO userDTO = (UserDTO)session.getAttribute("userDTO");        
+        UserDTO userDTO = (UserDTO)session.getAttribute("userDTO");    
+        // Calculate the construction.
+        ArrayList<LineItemDTO>[] array = calculate(pattern, length, width, height);
         // Get the array of ArrayList of LineItemDTO from session.
-        ArrayList<LineItemDTO>[] array = (ArrayList[])session.getAttribute("layers");
+        //ArrayList<LineItemDTO>[] array = (ArrayList[])session.getAttribute("layers");
         ArrayList<LineItemDTO> totals = null, temp = null;
         
         if (array != null && userDTO != null)        

@@ -23,8 +23,8 @@ import java.util.Set;
  */
 public class BrickPattern
 {       
-    public static final String LOEBERFORBANDT_1 = "Løberforbandt 1";
-    public static final String LOEBERFORBANDT_2 = "Løberforbandt 2";
+    public static final String LOEBERFORBANDT_1 = "Loeberforbandt 1";
+    public static final String LOEBERFORBANDT_2 = "Loeberforbandt 2";
     public static final String KVARTSTENSFORBANDT_A = "1/4 stensforbandt A";
     public static final String KVARTSTENSFORBANDT_B = "1/4 stensforbandt B";
     public static final String HALVSTENSFORBANDT = "1/2 stensforbandt";

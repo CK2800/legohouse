@@ -5,13 +5,9 @@
  */
 package ck.presentation.command;
 
-import ck.data.BrickPattern;
-import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
 import ck.logic.LogicFacade;
-import ck.presentation.Pages;
-import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;

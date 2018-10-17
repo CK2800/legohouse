@@ -83,8 +83,9 @@ public class Utils
         String result = "<select name=\"brickPattern\">$options</select>", options = "";
         for(String pattern : brickPatterns)
         {
-            options += "<option value=\"$pattern\">$pattern</option>";
-            options = options.replace("$pattern", pattern);
+            options += "<option value=\"$pattern1\">$pattern2</option>";
+            options = options.replace("$pattern1", pattern);
+            options = options.replace("$pattern2", pattern.replace("oe","&oslash;"));
         }
         result = result.replace("$options", options);
         return result;
@@ -172,7 +173,7 @@ public class Utils
        result = result.replace("$length", String.valueOf(orderDTO.getLength()));
        result = result.replace("$width", String.valueOf(orderDTO.getWidth()));
        result = result.replace("$height", String.valueOf(orderDTO.getHeight()));
-       result = result.replace("$pattern", orderDTO.getPattern());
+       result = result.replace("$pattern", orderDTO.getPattern().replace("oe", "&oslash;"));
        
        result += "<div><table class=\"table\"><thead><tr><th>Brick id</th><th>Qty</th><th>Brick</th></thead><tbody>";
        for(LineItemDTO lineitem : orderDTO.getLineItems())

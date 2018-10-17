@@ -57,12 +57,21 @@ public class FrontController extends HttpServlet
         {
             // save error message in request.
             request.setAttribute(ERROR_TEXT, e.getMessage());
-            // If the request has specified a path to return to, we will do this now. 
-            // The path must be the complete path from root.
-            String view = request.getParameter(ERROR_PATH);
-            if (view == null) // no error path, go to home/index
-                view = Pages.INDEX;            
-            
+//            // If the request has specified a path to return to, we will do this now. 
+//            // The path must be the complete path from root.
+//            String view = request.getParameter(ERROR_PATH);
+//            if (view == null) // no error path, go to home/index
+//                view = Pages.INDEX;            
+            String view = Pages.INDEX;
+            try
+            {
+                view = new UserPageCommand().execute(request, response);
+            }
+            catch(LegoException le)
+            {
+                // do nothing, we have catched the original 
+                // LegoException and set errormessage previously.
+            }
             request.getRequestDispatcher(view).forward(request, response);
         }
     }

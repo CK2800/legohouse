@@ -3,6 +3,8 @@
     Created on : 12-10-2018, 11:46:06
     Author     : Claus
 --%>
+<%@page import="ck.presentation.Pages"%>
+<%@page import="ck.presentation.FrontController"%>
 <%@page import="ck.data.LineItemDTO"%>
 <%@page import="ck.presentation.command.Command"%>
 <%@page import="ck.data.UserDTO"%>
@@ -26,11 +28,12 @@
     ArrayList<String> brickPatterns = (ArrayList<String>)request.getAttribute("brickPatterns");    
     String brickPatternsSelect = brickPatterns != null ? Utils.brickPatternsToSelect(brickPatterns):"No brick patterns available.";
     
-    // Get layers of calculated house from session and convert to html table, if any.
-    ArrayList<LineItemDTO>[] layers = (ArrayList[])request.getSession().getAttribute("layers");
+    // Get layers of calculated house from request and convert to html table, if any.
+    ArrayList<LineItemDTO>[] layers = (ArrayList[])request.getAttribute("layers");
     String layersTable = layers != null ? Utils.brickLayersToHtml(layers) : "No layers calculated.";
     
     String orderForm = (layers != null && length != null && width != null && height != null && brickPattern != null) ? Utils.createOrderForm(Integer.valueOf(length), Integer.valueOf(width), Integer.valueOf(height), brickPattern) : "";
+    String errorText = (String)request.getAttribute(FrontController.ERROR_TEXT);    
     
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -46,7 +49,7 @@
             <jsp:include page="Topmenu/content.jsp" />            
             <h2>Create new order</h2>
             <form action="FrontController" method="post">
-                <input type="hidden" name="command" value="<%= Command.CALCULATE_ORDER %>">
+                <input type="hidden" name="command" value="<%= Command.CALCULATE_ORDER %>">                
                 <input type="text" name="length" placeholder="Length of building">
                 <input type="text" name="width" placeholder="Width of building">
                 <input type="text" name="height" placeholder="Height of building">
@@ -56,6 +59,9 @@
             <%= layersTable %>
             <%= orderForm %>
             <%= ordersTable %>
-        </div>
+            <div class="error">
+                <%= errorText == null ? "" : errorText %>
+            </div>
+        </div>        
     </body>
 </html>

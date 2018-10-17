@@ -10,6 +10,7 @@ import ck.data.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -62,7 +63,7 @@ public class UserDAO
                 // Create the UserDTO and return it.
                 return new UserDTO(customerId, username, email, password, employee);            
             }
-            catch(Exception e)
+            catch(ClassNotFoundException | SQLException e)
             {
                 throw new LegoException("User was not created.", e.getMessage(), "UserDAO.createUser(String, String, String)");
             }       
@@ -101,7 +102,7 @@ public class UserDAO
                 rs.next();            
                 return UserDTO.mapUser(rs);                
             }
-            catch(Exception e)
+            catch(ClassNotFoundException | SQLException e)
             {
                 throw new LegoException("User could not be validated", e.getMessage(), "UserDAO.loginUser(String, String)");
             }

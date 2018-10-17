@@ -5,7 +5,6 @@
  */
 package ck.data;
 
-import ck.logic.LegoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

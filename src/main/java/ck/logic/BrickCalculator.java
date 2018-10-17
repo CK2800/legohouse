@@ -81,7 +81,13 @@ public class BrickCalculator
         Collections.reverse(bricks);
     }
     
-    private static void calculateSide(int[] sequence, int length)
+    /**
+     * Calculates one side of the structure.
+     * @param sequence A particular layer of the brick pattern.
+     * @param length Length of the side to be filled.
+     * @throws NullPointerException Might result from call to fillSequence().
+     */
+    private static void calculateSide(int[] sequence, int length) throws NullPointerException
     {
         // offset for sequence is at position 0.
         int offset = sequence[0];
@@ -112,39 +118,46 @@ public class BrickCalculator
      */
     protected static ArrayList<LineItemDTO>[] calculate(String patternName, int length, int width, int height) throws LegoException
     {   
-        // Set up needed variables.
-        initialize(height);
-        
-        // subtract 2 from length and width since their values include brick width of adjacent wall.
-        length -= 2;
-        width -= 2;
-        
-        // get pattern.
-        int[][]pattern = BrickPattern.getPattern(patternName);        
-                
-        // stopping conditions:
-        //if (patternLength > length)
-        if (false)
+        try
         {
-            throw new LegoException("Your house length is not suitable for this brick pattern", "House length < brick pattern length", "BrickCalculator.Calculate()");
-        }// more...
-        else
-        {    
-            for (int layer = 0; layer < height; layer++)
+            // Set up needed variables.
+            initialize(height);
+
+            // subtract 2 from length and width since their values include brick width of adjacent wall.
+            length -= 2;
+            width -= 2;
+
+            // get pattern.
+            int[][]pattern = BrickPattern.getPattern(patternName);        
+
+            // stopping conditions:
+            //if (patternLength > length)
+            if (false)
             {
-                initializeLayer();
-                
-                // find sequence for this layer, remember we may have more layers than sequences in pattern.
-                int[] sequence = pattern[layer % pattern.length];
-                
-                // Divide and CONQUER.... YAAARGH !
-                calculateSide(sequence, length);
-                calculateSide(sequence, width);
-                calculateSide(sequence, length);
-                calculateSide(sequence, width);                
-                
-                layers[layer] = lineItems;
+                throw new LegoException("Your house length is not suitable for this brick pattern", "House length < brick pattern length", "BrickCalculator.Calculate()");
+            }// more...
+            else
+            {    
+                for (int layer = 0; layer < height; layer++)
+                {
+                    initializeLayer();
+
+                    // find sequence for this layer, remember we may have more layers than sequences in pattern.
+                    int[] sequence = pattern[layer % pattern.length];
+
+                    // Divide and CONQUER.... YAAARGH !
+                    calculateSide(sequence, length);
+                    calculateSide(sequence, width);
+                    calculateSide(sequence, length);
+                    calculateSide(sequence, width);                
+
+                    layers[layer] = lineItems;
+                }
             }
+        }
+        catch(Exception e)
+        {
+            throw new LegoException("Calculation failed.\n" + e.getMessage(), "Brick calculation failed.\n" + e.getMessage(), "BrickCalculator.calculate()");
         }
         return layers;
     }
@@ -153,9 +166,10 @@ public class BrickCalculator
      * Fills a wall with bricks in pattern according to the sequence.
      * @param sequence Array of integers indicating sequence of brick id's.
      * @param length The length to be filled.
-     * @return 
+     * @return Integer indicating the remaining length that could not be filled according to sequence.
+     * 2throws NullPointerException If bricks are not instantiated, a null pointer exception will occur.
      */
-    private static int fillSequence(int[] sequence, int length)
+    private static int fillSequence(int[] sequence, int length) throws NullPointerException
     {        
         // Loop through sequence, first index indicates offset so skip 0.
         for(int a = 1; a < sequence.length; a++)

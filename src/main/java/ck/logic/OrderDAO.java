@@ -13,6 +13,7 @@ import ck.data.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -88,7 +89,7 @@ public class OrderDAO
                 }
             }
         }
-        catch(Exception e)
+        catch(SQLException | ClassNotFoundException e)
         {
             throw new LegoException("Your orders could not be retrieved.", e.getMessage(), "OrderDAO.getUserOrders(int)");
         }
@@ -166,7 +167,7 @@ public class OrderDAO
             // Reset the auto-commit state.
             connection.setAutoCommit(autocommit);
         }
-        catch(Exception e)
+        catch(ClassNotFoundException | SQLException e)
         {
             throw new LegoException("Order was not marked as shipped.", e.getMessage(), "OrderDAO.shipOrder(int)");            
         }
@@ -177,11 +178,12 @@ public class OrderDAO
     
     /**
      * Creates an order with the provided collection of line items.
-     * @param lineItems ArrayList of LineItemDTO objects.
+     * @param customerId Id of customer.
      * @param length Length of building.
      * @param width Width of building.
      * @param height Height of building.
      * @param pattern Pattern of bricks.
+     * @param lineItems ArrayList of LineItemDTO objects.
      * @return OrderDTO object representing the order created.
      * @throws LegoException 
      */
@@ -200,6 +202,7 @@ public class OrderDAO
             pstm.setInt(3, width);
             pstm.setInt(4, height);
             pstm.setString(5, pattern);
+                    
             
             // Execute the sql.
             pstm.executeUpdate();
@@ -222,7 +225,7 @@ public class OrderDAO
             // If we have come this far, we can retrieve the order from the database again.
             order = getOrder(orderId);
         }
-        catch(Exception e)
+        catch(SQLException | ClassNotFoundException e)
         {
             throw new LegoException("Order was not created", e.getMessage(), "OrderDAO.createOrder(ArrayList<LineItemDTO>)");
         }
@@ -235,13 +238,14 @@ public class OrderDAO
      * The OrderDTO User attribute is populated.
      * The OrderDTO lineItems are also populated as well as lineItems brick property.
      * @param orderId The orders id.
+     * @throws LegoException
      * @return OrderDTO
      */
     protected static OrderDTO getOrder(int orderId) throws LegoException
     {        
         OrderDTO order = null;  
         UserDTO user = null;
-        ArrayList<LineItemDTO> lineItems = new ArrayList<LineItemDTO>();
+        ArrayList<LineItemDTO> lineItems = new ArrayList<>();
         
         try
         {            
@@ -279,7 +283,7 @@ public class OrderDAO
                 order.setUserDTO(user);
             }
         }
-        catch(Exception e)
+        catch(SQLException | ClassNotFoundException | NullPointerException e)
         {
             throw new LegoException("Order was not found.", e.getMessage(), "OrderDAO.getOrder(int)");
         }

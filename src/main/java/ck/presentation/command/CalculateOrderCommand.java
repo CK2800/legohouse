@@ -7,7 +7,6 @@ package ck.presentation.command;
 
 import ck.data.BrickPattern;
 import ck.data.LineItemDTO;
-import ck.logic.BrickCalculator;
 import ck.logic.LegoException;
 import ck.logic.LogicFacade;
 import ck.presentation.Pages;

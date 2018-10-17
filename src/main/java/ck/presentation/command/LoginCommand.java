@@ -37,25 +37,10 @@ public class LoginCommand extends Command
         // log in user.
         loginUser(request, userDTO);
         
-        // Employee must se a list of shipped / unshipped orders.
-        if (userDTO.isEmployee())
-        {
-            // Get list of orders. user id in parameters doesn't really matter, since we are employee.
-            ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), true);                        
-            request.setAttribute("orders", orders);            
-            
-        }
-        else // Customer must...
-        {
-            // ... see a list of his/her orders.
-            ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), false); // not an employee.
-            request.setAttribute("orders", orders);
-            // ... be able to make a new order.
-            ArrayList<String> brickPatterns = BrickPattern.getPatterns();
-            request.setAttribute("brickPatterns", brickPatterns);
-        }
-        
-        return userDTO.isEmployee() ? Pages.EMPLOYEE : Pages.CUSTOMER;
+        // The logged in user has been stored in the session, so we can
+        // use the User page command to set up necessary objects for the
+        // view and have it return the correct page.
+        return new UserPageCommand().execute(request, response);        
     }
 
     /**

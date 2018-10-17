@@ -96,10 +96,14 @@ public class LogicFacade
      * Creates an order based on session attribute "layers". 
      * If the order is successfully created, the session attribute is removed.
      * @param session
+     * @param length
+     * @param width
+     * @param height
+     * @param pattern
      * @return
      * @throws LegoException 
      */
-    public static boolean createOrder(HttpSession session, int length, int width, int height) throws LegoException
+    public static boolean createOrder(HttpSession session, int length, int width, int height, String pattern) throws LegoException
     {
         boolean orderCreated = false;
         
@@ -131,7 +135,7 @@ public class LogicFacade
             }
             
             // create the order.
-            OrderDTO orderDTO = OrderDAO.createOrder(userDTO.getId(), length, width, height, totals);
+            OrderDTO orderDTO = OrderDAO.createOrder(userDTO.getId(), length, width, height, pattern, totals);
             orderCreated = orderDTO != null;
             if (orderCreated) // remove session attr. layers.                
                 session.removeAttribute("layers");

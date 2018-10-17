@@ -27,7 +27,8 @@ public class OrderDAO
     /**
      * Get details for order including its user, lineitems and brick of each line item.
      */
-    private static final String GET_ORDER_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, o.length, o.width, o.height," +
+    private static final String GET_ORDER_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate," +
+                                                "o.length, o.width, o.height, o.pattern," +
                                                 "l.orderId, l.brickId, l.qty, " +
                                                 "b.length as brickLength, b.width as brickWidth, " +
                                                 "u.username, u.email, u.employee " +
@@ -41,10 +42,10 @@ public class OrderDAO
      * Generic sql for retrieving a list of orders matching an 
      * optional WHERE clause ordered by an optional ORDERBY clause.
      */
-    private static final String GET_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, o.length, o.width, o.height, u.username, u.email, u.employee " +
+    private static final String GET_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate, o.length, o.width, o.height, o.pattern, u.username, u.email, u.employee " +
                                                        "FROM orders o INNER JOIN users u ON o.userId = u.id $WHERE $ORDERBY;";
     
-    private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(userId, length, width, height) VALUES (?,?,?,?);"; 
+    private static final String CREATE_ORDER_SQL    = "INSERT INTO orders(userId, length, width, height, pattern) VALUES (?,?,?,?,?);"; 
     private static final String CREATE_LINEITEM_SQL = "INSERT INTO lineitems(orderId, brickId, qty) VALUES (?, ?, ?);";
     private static final String SHIP_ORDER_SQL      = "UPDATE orders SET shippedDate = now() WHERE shippedDate is NULL AND id = ?;";
     //private static final String GET_USER_ORDERS_SQL = "SELECT o.id, o.userId, o.orderDate, o.shippedDate FROM orders o WHERE userId = ?;";
@@ -180,10 +181,11 @@ public class OrderDAO
      * @param length Length of building.
      * @param width Width of building.
      * @param height Height of building.
+     * @param pattern Pattern of bricks.
      * @return OrderDTO object representing the order created.
      * @throws LegoException 
      */
-    protected static OrderDTO createOrder(int customerId, int length, int width, int height, ArrayList<LineItemDTO> lineItems) throws LegoException
+    protected static OrderDTO createOrder(int customerId, int length, int width, int height, String pattern, ArrayList<LineItemDTO> lineItems) throws LegoException
     {
         OrderDTO order = null;
         try
@@ -197,6 +199,7 @@ public class OrderDAO
             pstm.setInt(2, length);
             pstm.setInt(3, width);
             pstm.setInt(4, height);
+            pstm.setString(5, pattern);
             
             // Execute the sql.
             pstm.executeUpdate();

@@ -10,10 +10,11 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="ck.data.OrderDTO"%>
 <%
-    // Get length, width, height
+    // Get length, width, height, brickpattern
     String length = request.getParameter("length");
     String width = request.getParameter("width");
     String height = request.getParameter("height");
+    String brickPattern = request.getParameter("brickPattern");
     // Get username.    
     String username = ((UserDTO)request.getSession().getAttribute("userDTO")).getUsername();
     
@@ -29,7 +30,7 @@
     ArrayList<LineItemDTO>[] layers = (ArrayList[])request.getSession().getAttribute("layers");
     String layersTable = layers != null ? Utils.brickLayersToHtml(layers) : "No layers calculated.";
     
-    String orderForm = (layers != null && length != null && width != null && height != null) ? Utils.createOrderForm(Integer.valueOf(length), Integer.valueOf(width), Integer.valueOf(height)) : "";
+    String orderForm = (layers != null && length != null && width != null && height != null && brickPattern != null) ? Utils.createOrderForm(Integer.valueOf(length), Integer.valueOf(width), Integer.valueOf(height), brickPattern) : "";
     
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

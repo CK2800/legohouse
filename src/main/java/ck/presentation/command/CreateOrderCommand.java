@@ -32,9 +32,10 @@ public class CreateOrderCommand extends Command
         int length = Integer.valueOf(request.getParameter("length"));
         int width = Integer.valueOf(request.getParameter("width"));
         int height = Integer.valueOf(request.getParameter("height"));
+        String pattern = request.getParameter("brickPattern");
         
         // Create the order and remove the layers from session.
-        LogicFacade.createOrder(session, length, width, height);
+        LogicFacade.createOrder(session, length, width, height, pattern);
         // Get users orders.
         ArrayList<OrderDTO> orders = LogicFacade.getOrders(userDTO.getId(), false); // not an employee.
         request.setAttribute("orders", orders);

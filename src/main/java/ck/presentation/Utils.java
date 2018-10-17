@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class Utils
 {
-    public static String createOrderForm(int length, int width, int height)
+    public static String createOrderForm(int length, int width, int height, String brickPattern)
     {
         String result = "";
         if (length > 0 && width > 0 && height > 0)
@@ -27,6 +27,7 @@ public class Utils
                    + "<input type=\"hidden\" name=\"length\" value=\"" + length + "\" />"
                    + "<input type=\"hidden\" name=\"width\" value=\"" + width + "\" />"
                    + "<input type=\"hidden\" name=\"height\" value=\"" + height + "\" />"
+                   + "<input type=\"hidden\" name=\"brickPattern\" value=\"" + brickPattern + "\" />"
                    + "<input type=\"submit\" value=\"Place order\" /></form>";
         }        
         
@@ -156,10 +157,10 @@ public class Utils
        
        String result = 
                "<div><table class=\"table\"><thead><tr>" + 
-               "<th>User id:</th><th>Username</th><th>Email</th><th>Order date</th><th>Shipped date</th><th>Length</th><th>Width</th><th>Height</th>" + 
+               "<th>User id:</th><th>Username</th><th>Email</th><th>Order date</th><th>Shipped date</th><th>Length</th><th>Width</th><th>Height</th><th>Pattern</th>" + 
                "</tr></thead><tbody><tr>" + 
                "<td>$oid</td><td>$uname</td><td>$email</td><td>$oDate</td><td>$sDate</td>" + 
-               "<td>$length</td><td>$width</td><td>$height</td>" +
+               "<td>$length</td><td>$width</td><td>$height</td><td>$pattern</td>" +
                "</tr></tbody></table></div>";
        
        result = result.replace("$oid", String.valueOf(orderDTO.getId()));
@@ -171,6 +172,7 @@ public class Utils
        result = result.replace("$length", String.valueOf(orderDTO.getLength()));
        result = result.replace("$width", String.valueOf(orderDTO.getWidth()));
        result = result.replace("$height", String.valueOf(orderDTO.getHeight()));
+       result = result.replace("$pattern", orderDTO.getPattern());
        
        result += "<div><table class=\"table\"><thead><tr><th>Brick id</th><th>Qty</th><th>Brick</th></thead><tbody>";
        for(LineItemDTO lineitem : orderDTO.getLineItems())

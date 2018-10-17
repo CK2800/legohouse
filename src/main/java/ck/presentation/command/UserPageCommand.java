@@ -10,7 +10,6 @@ import ck.data.OrderDTO;
 import ck.data.UserDTO;
 import ck.logic.LegoException;
 import ck.logic.LogicFacade;
-import ck.logic.OrderDAO;
 import ck.presentation.Pages;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;

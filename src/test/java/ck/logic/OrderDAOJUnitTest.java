@@ -130,7 +130,7 @@ public class OrderDAOJUnitTest
         lineitems.add(new LineItemDTO(2,3));
         lineitems.add(new LineItemDTO(3,4));
         
-        OrderDTO newOrder = OrderDAO.createOrder(1, 10,5,4, lineitems);
+        OrderDTO newOrder = OrderDAO.createOrder(1, 10,5,4,"junittest", lineitems);
         assertNotNull(newOrder);
         
     }

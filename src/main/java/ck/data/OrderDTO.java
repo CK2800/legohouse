@@ -24,6 +24,7 @@ public class OrderDTO
     private int length;
     private int width;
     private int height;
+    private String pattern;
     private ArrayList<LineItemDTO> lineItems;
     private UserDTO userDTO;
     
@@ -35,6 +36,7 @@ public class OrderDTO
     public int getLength(){return length;}
     public int getWidth(){return width;}
     public int getHeight(){return height;}
+    public String getPattern(){return pattern;}
     public ArrayList<LineItemDTO> getLineItems(){return lineItems;}
     public UserDTO getUserDTO(){return userDTO;}
     
@@ -47,7 +49,7 @@ public class OrderDTO
      * @param orderDate date of order.
      * @param shippedDate date of order shipment.     
      */
-    public OrderDTO(int id, int customerId, Date orderDate, Date shippedDate, int length, int width, int height)
+    public OrderDTO(int id, int customerId, Date orderDate, Date shippedDate, int length, int width, int height, String pattern)
     {
         this.id = id;
         this.userId = customerId;
@@ -56,6 +58,7 @@ public class OrderDTO
         this.length = length;
         this.width = width;
         this.height = height;
+        this.pattern = pattern;
         
     }
     
@@ -89,6 +92,7 @@ public class OrderDTO
                             rs.getDate("shippedDate"), 
                             rs.getInt("length"), 
                             rs.getInt("width"), 
-                            rs.getInt("height"));
+                            rs.getInt("height"),
+                            rs.getString("pattern"));
     }
 }

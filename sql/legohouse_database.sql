@@ -22,6 +22,7 @@ CREATE TABLE orders(
     length int NOT NULL,
     width int NOT NULL,
     height int NOT NULL,
+    pattern VARCHAR(50) NOT NULL,
     orderDate datetime NOT NULL DEFAULT NOW(), -- order date defaults to now().
     shippedDate datetime, -- order shipment date
     CONSTRAINT fk_orders_users
